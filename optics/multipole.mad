@@ -1,0 +1,6 @@
+QF: MULTIPOLE, KNL={0, 0.5};
+QD: MULTIPOLE, KNL={0,-0.5};
+O:  DRIFT, L=1.2;
+
+FODO: LINE = (QF, O, QD, O);
+

@@ -1,0 +1,7 @@
+O1:  DRIFT, L=1.0;
+O2:  DRIFT, L=2.0;
+O3:  DRIFT, L=3.0;
+O4:  DRIFT, L=4.0;
+
+RING: LINE = (O1, O2, O3, O4);
+
