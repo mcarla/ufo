@@ -1,6 +1,6 @@
                           U.F.O.
-                          
-
+ 
+ 
                         \__/  ^__^
                         (oo)  (oo)
                        _/--\  /--\_
@@ -8,9 +8,9 @@
                 (________________________)
                      /  \________/  \
                     /                \
-
-
-
+ 
+ 
+ 
 An Unreliable, but (Undoubtedly) Fast Optics code
 
 Developed by Michele Carla',
