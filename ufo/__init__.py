@@ -24,3 +24,27 @@ DEFAULT_SEXTUPOLE_SLICES  = 4
 DEFAULT_CL_OPTIONS = '-cl-fast-relaxed-math -cl-mad-enable'
 DEFAULT_CONTEXT = context(0)
 
+try:
+    __IPYTHON__
+    print("""
+
+                            U.F.O.
+  
+
+                          \__/  ^__^
+                          (oo)  (oo)
+                         _/--\  /--\_
+                   _.--===0=0====0=0===--._
+                  (________________________)
+                       /  \________/  \\
+                      /                \\
+
+
+       An Unreliable, but (Undoubtedly) Fast Optics code
+                         Version 0.00
+
+       """)
+
+except:
+    pass
+
