@@ -26,7 +26,7 @@ DEFAULT_CONTEXT = context(0)
 
 try:
     __IPYTHON__
-    print("""
+    print(r"""
 
                             U.F.O.
   
@@ -36,8 +36,8 @@ try:
                          _/--\  /--\_
                    _.--===0=0====0=0===--._
                   (________________________)
-                       /  \________/  \\
-                      /                \\
+                       /  \________/  \
+                      /                \
 
 
        An Unreliable, but (Undoubtedly) Fast Optics code
