@@ -16,326 +16,8 @@ from .methods import FIVED
 
 import ufo
 
-class Element():
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return self.label 
-
-    def __repr__(self):  
-        msg = f'{self.label: <8}: {type(self).__name__.upper(): <12} '
-        return msg + '   '.join([f'{p}={self.__dict__[p]}' for p in self.parameters])
-
-    def __replace__(self, fragment, **kwargs):
-        for p in self.parameters:
-            val = kwargs[p] if p in kwargs else self.__dict__[p]
-            fragment = fragment.replace(p, '(' + str(val) + ')')
-        return fragment
-
-    def method(self, **kwargs):
-        return ['']
-
-    def survey(self, x0=[0., 0.], alpha0=0.):
-        length  = getattr(self, 'length', 0.)
-        alpha0 += getattr(self, 'angle',  0.)
-
-        x0[0] += np.cos(alpha0) * length
-        x0[1] += np.sin(alpha0) * length
-
-        return x0.copy(), alpha0
-
-class Marker(Element):
-    def __init__(self, label):
-        self.label = label
-        self.parameters = []
-
-    def dump(self, style):
-        if style == 'mad' or style == 'elegant':
-            return f'{self.label}: MARKER;\n'
-        if style == 'at':
-            return f"{self.label} = marker('{self.label}', 'IdentityPass');\n"
-        if style == 'opa':
-            return f'{self.label} : opticsmarker;\r\n'
-
-class Drift(Element):
-    def __init__(self, label, length=0.):
-        self.label  = label
-        self.length = length
-        self.parameters = ['length']
-
-    def method(self, flags=0, fracture=[], length=None):
-        length = length or self.length
-
-        code = []
-        f0 = 0.
-        for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.drift(flags, f'{length} * {(f - f0)}'))
-            f0 = f
-        return code
-
-    def dump(self, style):
-       if style == 'mad' or style == 'elegant':
-           return f'{self.label}: DRIFT, L={self.length};\n'
-       if style == 'at':
-           return f"{self.label} = drift('{self.label}', {self.length}, 'DriftPass');\n"
-       if style == 'opa':
-           return f"{self.label} : drift, l = {self.length};\r\n"
-
-class Multipole(Element):
-    def __init__(self, label, knl=[], ksl=[], dx=0., dy=0.):
-        self.label = label
-        self.knl   = knl
-        self.ksl   = ksl
-        self.dx    = dx
-        self.dy    = dy
-        self.parameters = ['knl', 'ksl', 'dx', 'dy']
-
-    #Multipole of order N can be accessed also as self.kN and self.kNs,
-    #this is useful for parametrization (vectors are not implemented)
-    def __setattr__(self, name, value):
-        if name[0] == 'k' and name[1:].isdigit(): #Normal
-            self.knl[int(name[1:])] = value
-            return
-        if name[0] == 'k' and name[-1] == 's' and name[1:-1].isdigit(): #Skew
-            self.ksl[int(name[1:-1])] = value
-            return
-
-        super.__setattr__(self, name, value)
-
-    def __getattr__(self, name):
-        if name[0] == 'k' and name[1:].isdigit(): #Normal
-            return self.knl[int(name[1:])]
-        if name[0] == 'k' and name[-1] == 's' and name[1:-1].isdigit(): #Skew
-            return self.ksl[int(name[1:-1])]
-
-        return super.__getattr__(self, name)
-
-    def method(self, flags=0, fracture=[], knl=None, ksl=None, dx=None, dy=None, **kwargs):
-        if knl == None: knl = self.knl.copy() #Explicit comparison against None
-        if ksl == None: ksl = self.ksl.copy() #to discriminate from []
-        dx  = dx  or self.dx
-        dy  = dx  or self.dy
-
-        for prm, value in kwargs.items():
-            if prm[0] == 'k' and prm[1:].isdigit(): #Normal
-                knl[int(prm[1:])] = value
-            if prm[0] == 'k' and prm[-1] == 's' and prm[1:-1].isdigit(): #Skew
-                ksl[int(prm[1:-1])] = value
-
-        code  = methods.align(dx, dy)
-        code += methods.kick(flags, knl, ksl)
-        code += methods.align(f'-({dx})', f'-({dy})')
-        return [code]
-
-    def dump(self, style):
-       if style == 'mad' or style == 'elegant':
-           knl = ', '.join([str(k) for k in self.knl])
-           ksl = ', '.join([str(k) for k in self.ksl])
-           return f'{self.label}: MULTIPOLE, KNL={{ {knl} }}, KNL={{ {ksl} }};\n'
-
-       if style == 'at' or style == 'opa':
-           raise Exception('Export Multipoles not supported for at and opa')
-
-class Quadrupole(Element):
-    def __init__(self, label, slices=None, length=0., k1=0., dx=0., dy=0.):
-        self.label  = label
-        self.slices = slices if slices else ufo.DEFAULT_QUADRUPOLE_SLICES
-        self.length = length
-        self.k1     = k1
-        self.dx     = dx
-        self.dy     = dy
-        self.parameters = ['length', 'k1', 'dx', 'dy']
-
-    def method(self, flags=0, fracture=[], slices=None, length=None, k1=None, dx=None, dy=None):
-        slices = slices or self.slices
-        length = length or self.length
-        k1     = k1     or self.k1
-        dx     = dx     or self.dx
-        dy     = dx     or self.dy
- 
-        code = []
-        f0 = 0.
-        for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.quadrupole(flags, slices, f'{length} * {(f - f0)}', k1))
-            f0 = f
-
-        code[0]  = methods.align(dx, dy) + code[0]
-        code[-1] = code[-1] + methods.align(f'-({dx})', f'-({dy})')
-        return code
-
-    def dump(self, style):
-        if style == 'mad' or style == 'elegant':
-            return f'{self.label}: QUADRUPOLE, L={self.length}, K1={self.k1};\n'
-        if style == 'at':
-            return f"{self.label} = quadrupole('{self.label}', {self.length}, {self.k1},'StrMPoleSymplectic4Pass');\n"
-        if style == 'opa':
-            return f"{self.label} : quadrupole, l = {self.length}, k = {self.k1};\r\n"
-
-class Sbend(Element):
-    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0.):
-        self.label  = label
-        self.slices = slices if slices else ufo.DEFAULT_BEND_SLICES
-        self.length = length
-        self.angle  = angle
-        self.k1     = k1
-        self.e1     = e1
-        self.e2     = e2
-        self.dx     = dx
-        self.dy     = dy
-        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy']
-
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None):
-        length = length or self.length
-        slices = slices or self.slices
-        angle  = angle  or self.angle
-        k1     = k1     or self.k1
-        e1     = e1     or self.e1
-        e2     = e2     or self.e2
-        dx     = dx     or self.dx
-        dy     = dx     or self.dy
- 
-        code = []
-        f0 = 0.
-        for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1))
-            f0 = f
-
-        code[0]   = methods.align(dx, dy) + methods.edge(flags, length, angle, e1) + code[0]
-        code[-1] += methods.edge(flags, length, angle, e2) + methods.align(f'-({dx})', f'-({dy})')
-        return code
-
-    def dump(self, style):
-        if style == 'mad' or style == 'elegant':
-            return f'{self.label}: SBEND, L={self.length}, ANGLE={self.angle}, K1={self.k1}, E1={self.e1}, E2={self.e2};\n'
-        if style == 'at':
-            print('NOT SUPPORTED')
-        if style == 'opa':
-            print('NOT SUPPORTED')
-
-class Rbend(Element):
-    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0.):
-        self.label  = label
-        self.slices = slices if slices else ufo.DEFAULT_BEND_SLICES
-        self.length = length
-        self.angle  = angle
-        self.k1     = k1
-        self.e1     = e1
-        self.e2     = e2
-        self.dx     = dx
-        self.dy     = dy
-        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy']
-
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None):
-        length = length or self.length
-        slices = slices or self.slices
-        angle  = angle  or self.angle
-        k1     = k1     or self.k1
-        e1     = e1     or self.e1
-        e2     = e2     or self.e2
-        dx     = dx     or self.dx
-        dy     = dx     or self.dy
- 
-        code = []
-        f0 = 0.
-        for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1))
-            f0 = f
-
-        code[0]   = methods.align(dx, dy) + methods.edge(flags, length, angle, f'{e1} + ({angle}*0.5)') + code[0]
-        code[-1] += methods.edge(flags, length, angle, f'{e2} + ({angle}*0.5)') + methods.align(f'-({dx})', f'-({dy})')
-
-        return code
-
-    def dump(self, style):
-        if style == 'mad' or style == 'elegant':
-            return f'{self.label}: RBEND, L={self.length}, ANGLE={self.angle}, K1={self.k1};\n'
-        if style == 'at':
-            return f"{self.label} = rbend('{self.label}', {self.length}, {self.angle}, 0, 0, {self.k1}, 'BndMPoleSymplectic4Pass');\n"
-            return f"{self.label} = rbend('{self.label}', {self.length}, {self.angle}, 0, 0, {self.k1}, 'BndMPoleSymplectic4Pass');\n"
-        if style == 'opa':
-            print('ERROR RBEND NOT iMPLEMENTED IN OPA')
-            exit()
-            t  = self.ANGLE / 2. / np.pi * 360.
-            t1 = self.e1 / 2. / np.pi * 360.
-            t2 = self.e2 / 2. / np.pi * 360.
-            return f"{self.label} : bending, l = {self.length}, t = {t}, k = {self.k1}, t1 = {t1}, t2 = {t2};\r\n"
-
-class Sextupole(Element):
-    def __init__(self, label, length=0., slices=None, k2=0., k2s=0., dx=0., dy=0.):
-        self.label  = label
-        self.length = length
-        self.slices = slices if slices else ufo.DEFAULT_SEXTUPOLE_SLICES
-        self.k2     = k2
-        self.k2s    = k2s
-        self.dx     = dx
-        self.dy     = dy
-        self.parameters = ['length', 'k2', 'k2s', 'dx', 'dy']
-
-    def method(self, flags=0, fracture=[], length=None, slices=None, k2=None, k2s=None, dx=None, dy=None):
-        length = length or self.length
-        slices = slices or self.slices
-        k2     = k2     or self.k2
-        k2s    = k2s    or self.k2s
-        dx     = dx     or self.dx
-        dy     = dx     or self.dy
-
-        code = []
-        f0 = 0.
-        for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.teapot(flags, f'{length} * {(f - f0)}', slices, [0., 0., k2], [0., 0., k2s]))
-            f0 = f
-
-        code[0]  = methods.align(dx, dy) + code[0]
-        code[-1] = code[-1] + methods.align(f'-({dx})', f'-({dy})')
-        return code
-
-    def dump(self, style):
-        if style == 'mad' or style == 'elegant':
-            return f'{self.label}: SEXTUPOLE, L={self.length}, K2={self.k2};\n'
-        if style == 'at':
-            return f"{self.label} = sextupole('{label}', {self.length}, {self.k2},'StrMPoleSymplectic4Pass');\n"
-        if style == 'opa':
-            return f"{self.label} : sextupole, l = {self.length}, k = {self.k2 * .5};\r\n"
-
-class Octupole(Element):
-    def __init__(self, label, length=0., slices=None, k3=0., k3s=0., dx=0., dy=0.):
-        self.label  = label
-        self.length = length
-        self.slices = slices if slices else ufo.DEFAULT_SEXTUPOLE_SLICES
-        self.k3     = k3
-        self.k3s    = k3s
-        self.dx     = dx
-        self.dy     = dy
-        self.parameters = ['length', 'k3', 'k3s', 'dx', 'dy']
-
-    def method(self, flags=0, fracture=[], length=None, slices=None, k3=None, k3s=None, dx=None, dy=None):
-        length = length or self.length
-        slices = slices or self.slices
-        k3     = k3     or self.k3
-        k3s    = k3s    or self.k3s
-        dx     = dx     or self.dx
-        dy     = dx     or self.dy
-
-        code = []
-        f0 = 0.
-        for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.teapot(flags, f'{length} * {(f - f0)}', slices, [0., 0., 0., k3], [0., 0., 0., k3s]))
-            f0 = f
-
-        code[0]  = methods.align(dx, dy) + code[0]
-        code[-1] = code[-1] + methods.align(f'-({dx})', f'-({dy})')
-        return code
-
-    def dump(self, style):
-        if style == 'mad' or style == 'elegant':
-            return f'{self.label}: OCTUPOLE, L={self.length}, K3={self.k3};\n'
-        if style == 'at':
-            return f"{self.label} = octupole('{label}', {self.length}, {self.k3},'StrMPoleSymplectic4Pass');\n"
-        if style == 'opa':
-            return f"{self.label} : octupole, l = {self.length}, k = {self.k3 * .5};\r\n"
-
 class Lattice():
+    """A class containing elements and lines"""
     def __init__(self, path=None):
         if path:
             self.__dict__.update(mad.load(path))
@@ -344,6 +26,7 @@ class Lattice():
         return '\n'.join([f'{repr(self.__dict__[p])}' for p in self.__dict__])
 
 class Line(list):
+    """A class derivated from the list class, containing a list of elements or other lines"""
     def __init__(self, label):
         self.label = label #Same label convention as elements
         super().__init__()
@@ -369,6 +52,7 @@ class Line(list):
     angle  = property(__get_angle,  None)
 
     def find(self, what):
+        """Return a list elements positons such that 'what(element) == True'"""
         where=[]
         for idx, element in enumerate(self.flatten()):
             if what(element):
@@ -377,6 +61,7 @@ class Line(list):
         return where
 
     def locate(self, element): #Warning maybe this could be implemented in a smarter way?
+        """Return the position in meters of 'element'"""
         if element == -1: return self.length
         flat_line = self.flatten()
         s = 0
@@ -387,6 +72,7 @@ class Line(list):
             s += getattr(e, 'length', 0.)
 
     def survey(self, x0=[0., 0.], alpha0=0.):
+        """Not fully implemented"""
         x = []
         alpha = []
         for e in self:
@@ -398,6 +84,20 @@ class Line(list):
         #return [x = e.survey(x=x, alpha=alpha) for e in self]
 
     def method(self, fracture=[], flags=0, parameters=[]):
+        """
+        Return the OpenCL pass method
+
+        Parameters
+        ----------
+            fracture : list
+                When fracture is provided the returned method will be splitted
+                in multiples methods, each relative to a fraction of the line
+            flags : int
+                Combination of: LINEAR, FIVED, EXACT, KICK, RADIATION,
+                                DOUBLE_PRECISION, ACHROMATIC
+            parameters : list
+                A list of parameters that will not be hardcoded in the method
+        """
         line = self.flatten()
         code = ['']
         for idx, element in enumerate(line):
@@ -422,10 +122,12 @@ class Line(list):
         return code
 
     def flatten(self):
+        """Return a flattened version of the line (all lines are expanded into its composing elements)"""
         flat = [e.flatten() if getattr(e, 'flatten', None) else [e] for e in self]
         return sum(flat, []) #Flatten list of lists
 
     def dump(self, style):
+        """Return a text representation of the line compatible with one of mad, elegant, opa or at file formats"""
         if style == 'mad' or style == 'elegant':
             line = f'{self.label}: LINE=('
         if style == 'at':
@@ -451,6 +153,7 @@ class Line(list):
         return line
 
 class Beam():
+    """Class containg some beam informations"""
     def __init__(self, energy=3e9, particle_mass=electron_mass, bunch_charge=1e-9, beam_current=0.25,
                  ex=1e-9, ey=1e-9, bunch_length=6e-3, energy_spread=1e-3):
         self.energy = energy
@@ -464,6 +167,18 @@ class Beam():
         self.energy_spread = energy_spread
 
 def dump(lattice, path, style='mad', beam=Beam()): #style can be 'mad', 'elegant', 'at' or opa
+    """
+    Save an antire lattice to a file compatible with mad, elegant, accelerator toolbox or opa
+
+    Parameters
+    ----------
+        lattice : Lattice
+            The lattice to be saved
+        path : str
+            Path to the saved file
+        style : str
+            One among: 'mad', 'elegant', 'at', 'opa'
+    """
     dump_file = open(path, 'w')
     if style == 'at':
         dump_file.write('function {}\n\n'.format(path.split(".")[0]))
