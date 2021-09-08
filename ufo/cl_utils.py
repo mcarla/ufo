@@ -11,7 +11,7 @@ import pyopencl.tools
 # Check what OpenCL devices are available
 def list_devices(device=None):
     """
-    Return a list of available OpenCL devices, if a device ID is provided a
+    Print a list of available OpenCL devices, if a device ID is provided a
     device descriptor is returned
 
     Parameters
