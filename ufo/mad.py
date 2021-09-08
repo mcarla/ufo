@@ -7,7 +7,7 @@
 
 import collections
 import re
-import ufo.lattice
+import ufo
 
 Token = collections.namedtuple('Token', ['type', 'value'])
 
@@ -99,14 +99,14 @@ def pop_or_die(tokenizer, kind):
 def load(path, flatten=True):
 
     elements = {
-        'MARKER'    : lambda label:                        ufo.lattice.Marker(label),
-        'DRIFT'     : lambda label, L=0.:                  ufo.lattice.Drift(label, length=L),
-        'QUADRUPOLE': lambda label, L=0., K1=0.:           ufo.lattice.Quadrupole(label, length=L, k1=K1),
-        'SBEND'     : lambda label, L=0., ANGLE=0., K1=0., E1=0., E2=0.: ufo.lattice.Sbend(label, length=L, angle=ANGLE, k1=K1, e1=E1, e2=E2),
-        'RBEND'     : lambda label, L=0., ANGLE=0., K1=0., E1=0., E2=0.: ufo.lattice.Rbend(label, length=L, angle=ANGLE, k1=K1, e1=E1, e2=E2),
-        'SEXTUPOLE' : lambda label, L=0., K2=0., K2S=0.:   ufo.lattice.Sextupole(label, length=L, k2=K2, k2s=K2S),
-        'OCTUPOLE'  : lambda label, L=0., K3=0., K3S=0.:   ufo.lattice.Octupole(label, length=L, k3=K3, k3s=K3S),
-        'MULTIPOLE' : lambda label, KNL=[], KSL=[]:        ufo.lattice.Multipole(label, knl=KNL, ksl=KSL)
+        'MARKER'    : lambda label:                        ufo.Marker(label),
+        'DRIFT'     : lambda label, L=0.:                  ufo.Drift(label, length=L),
+        'QUADRUPOLE': lambda label, L=0., K1=0.:           ufo.Quadrupole(label, length=L, k1=K1),
+        'SBEND'     : lambda label, L=0., ANGLE=0., K1=0., E1=0., E2=0.: ufo.Sbend(label, length=L, angle=ANGLE, k1=K1, e1=E1, e2=E2),
+        'RBEND'     : lambda label, L=0., ANGLE=0., K1=0., E1=0., E2=0.: ufo.Rbend(label, length=L, angle=ANGLE, k1=K1, e1=E1, e2=E2),
+        'SEXTUPOLE' : lambda label, L=0., K2=0., K2S=0.:   ufo.Sextupole(label, length=L, k2=K2, k2s=K2S),
+        'OCTUPOLE'  : lambda label, L=0., K3=0., K3S=0.:   ufo.Octupole(label, length=L, k3=K3, k3s=K3S),
+        'MULTIPOLE' : lambda label, KNL=[], KSL=[]:        ufo.Multipole(label, knl=KNL, ksl=KSL)
     }
 
     try:

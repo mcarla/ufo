@@ -6,6 +6,7 @@
 #   Authors: M. Carla'
 
 from ufo.lattice import *
+from ufo.elements import *
 from ufo.constants import *
 from ufo.track import Track
 from ufo.optics import Optics
@@ -20,6 +21,7 @@ DEFAULT_QUADRUPOLE_SLICES = 8
 DEFAULT_BEND_SLICES       = 8
 DEFAULT_MULTIPOLE_SLICES  = 4
 DEFAULT_SEXTUPOLE_SLICES  = 4
+DEFAULT_OCTUPOLE_SLICES   = 4
 
 DEFAULT_CL_OPTIONS = '-cl-fast-relaxed-math -cl-mad-enable'
 DEFAULT_CONTEXT = context(0)
