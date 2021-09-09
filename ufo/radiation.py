@@ -10,6 +10,10 @@ from .constants import *
 from . import lattice
 
 class RadiationIntegrals():
+    """
+    Utility class to manipulate radiation integrals. Equilibrium emittance and
+    radiation losses can be obtained through the attributes: U0 and Ex
+    """
     def __init__(self, I1, I2, I4, I5):
         self.I1 = I1
         self.I2 = I2
@@ -29,6 +33,12 @@ class RadiationIntegrals():
     Ex  = property(__get_Ex,  None)
 
 def emittance(optics):
+    """
+    Compute radiation integrals (as in SLAC 1193) given an 'Optics' object.
+    Only elements included in 'optics' will be considered in the radiation
+    integrals computation.
+    Warning: edge effects of the dipoles are ignored!
+    """
     I1 = I2 = I4 = I5 = 0
 
     for (_, element), alpha, beta, d, dp in zip(optics.where, optics.ax, optics.bx, optics.dx, optics.dpx):
