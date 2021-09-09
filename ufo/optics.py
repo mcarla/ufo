@@ -19,6 +19,28 @@ from . import track
 import ufo
 
 class Optics(track.Track):
+    """
+    Compute betatron and dispersion function of a given line with periodic or
+    user specified boundary conditions.
+
+    line       : Line    -> Ring to be used for tracking
+    periodic   : Boolen  -> If True periodic boundary conditions are used.
+                            If False user specified initial condition are used,
+                            initial conditions should be specified before
+                            calling run() by means of the attributes: ax, ay,
+                            bx, by, dx, dy, dpx, dpy.
+
+    flags      : int     -> Combination of: LINEAR, FIVED, EXACT, KICK,
+                            RADIATION, DOUBLE_PRECISION, ACHROMATIC
+    parameters : list    -> A list of parameters that will not be hardcoded in
+                            the pass method. Parameter buffer is accessed via
+                            the attribute 'parameters' and should be
+                            initialized before tracking
+    where      : list    -> List of postions where optics functions coordinates
+                            will be evaluated
+    context    : Context -> OpenCL context, as returned by ufo.context() 
+    options    : str     -> OpenCL compiler options
+    """
     def __init__(self, line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC,
                  context=cl_utils.context(0), options=None):
 
@@ -112,6 +134,12 @@ class Optics(track.Track):
         self.muy = np.empty(self.count)
 
     def run(self, threads=3):
+        """
+        Submit the job and start the tracking
+
+        threads : int -> Number of threads to be used for tracking. A number
+                         higher than '3*number of parameters' may cause undefined behaviour
+        """
         self.pool_idx[0] = threads
 
         cl.enqueue_copy(self.queue, self.__dev_pool_idx, self.pool_idx) #Copy to device
