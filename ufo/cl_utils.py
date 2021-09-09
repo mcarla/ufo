@@ -14,10 +14,7 @@ def list_devices(device=None):
     Print a list of available OpenCL devices, if a device ID is provided a
     device descriptor is returned
 
-    Parameters
-    ----------
-        device : int
-            Device ID
+    device : int -> Device ID
     """
     platforms = cl.get_platforms()
 
@@ -31,6 +28,7 @@ def list_devices(device=None):
             idx += 1
  
 def context(device):
-    """Take a device descriptos as returned by 'list_devices()' and return an OpenCL context"""
+    """Take a device descriptos as returned by 'list_devices()' and return an
+       OpenCL context"""
     return cl.Context([list_devices(device=device)])
 

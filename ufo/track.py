@@ -17,6 +17,26 @@ from .methods import FIVED, DOUBLE_PRECISION
 import ufo
 
 class Track():
+    """
+    Track a bunch of particles trhough a ring, allowing to sample particles
+    coordinates at different positions at every turn
+
+    line       : Line    -> Ring to be used for tracking
+    flags      : int     -> Combination of: LINEAR, FIVED, EXACT, KICK,
+                            RADIATION, DOUBLE_PRECISION, ACHROMATIC
+    turns      : int     -> Maximum number of turns to be tracked
+    particles  : int     -> Number of particles in the bunch
+    parameters : list    -> A list of parameters that will not be hardcoded in
+                            the pass method. Parameter buffer is accessed via
+                            the attribute 'parameters' and should be
+                            initialized before tracking
+    where      : list    -> List of postions where particles coordinates will
+                            be sampled
+    dp         : float   -> Bunch relative energy deviation, required only when
+                            the flag 'FIVED' is set
+    context    : Context -> OpenCL context, as returned by ufo.context() 
+    options    : str     -> OpenCL compiler options
+    """
     def __init__(self, line, flags=0x00, turns=1000, particles=1000, parameters=[],
                  where=[], dp=0., context=None, options=None):
 
@@ -101,6 +121,12 @@ class Track():
         self.__dev_track    = cl.Buffer(self.ctx, mf.WRITE_ONLY, self.track.nbytes)
 
     def run(self, threads=1):
+        """
+        Submit the job and start the tracking
+
+        threads : int -> Number of threads to be used for tracking. A number
+                         higher than 'particles' may cause undefined behaviour
+        """
         self.pool_idx[0] = threads
 
         cl.enqueue_copy(self.queue, self.__dev_pool_idx, self.pool_idx) #Copy to device

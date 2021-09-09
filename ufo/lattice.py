@@ -87,16 +87,13 @@ class Line(list):
         """
         Return the OpenCL pass method
 
-        Parameters
-        ----------
-            fracture : list
-                When fracture is provided the returned method will be splitted
-                in multiples methods, each relative to a fraction of the line
-            flags : int
-                Combination of: LINEAR, FIVED, EXACT, KICK, RADIATION,
-                                DOUBLE_PRECISION, ACHROMATIC
-            parameters : list
-                A list of parameters that will not be hardcoded in the method
+        fracture   : list -> When fracture is provided the returned method will
+                             be splitted in multiples methods, each relative to
+                             a fraction of the line
+        flags      : int  -> Combination of: LINEAR, FIVED, EXACT, KICK,
+                             RADIATION, DOUBLE_PRECISION, ACHROMATIC
+        parameters : list -> A list of parameters that will not be hardcoded in
+                             the method
         """
         line = self.flatten()
         code = ['']
@@ -168,16 +165,12 @@ class Beam():
 
 def dump(lattice, path, style='mad', beam=Beam()): #style can be 'mad', 'elegant', 'at' or opa
     """
-    Save an antire lattice to a file compatible with mad, elegant, accelerator toolbox or opa
+    Save an antire lattice to a file compatible with mad, elegant,
+    accelerator-toolbox or opa
 
-    Parameters
-    ----------
-        lattice : Lattice
-            The lattice to be saved
-        path : str
-            Path to the saved file
-        style : str
-            One among: 'mad', 'elegant', 'at', 'opa'
+    lattice : Lattice -> The lattice to be saved
+    path    : str     -> Path to the saved file
+    style   : str     ->  One among: 'mad', 'elegant', 'at', 'opa'
     """
     dump_file = open(path, 'w')
     if style == 'at':

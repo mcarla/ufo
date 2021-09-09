@@ -1,9 +1,4 @@
-#   You can redistribute this file and/or modify it under the terms of the GNU
-#   General Public License GPLv3 (or later), as published by the Free Software
-#   Foundation. This file is distributed in the hope that it will be useful, but
-#   WITHOUT ANY WARRANTY OF ANY KIND. See http://gnu.org/licenses for details.
-
-#   Authors: M. Carla'
+''' UFO is a GPU oriented particle accelerator tracking code '''
 
 from ufo.lattice import *
 from ufo.elements import *

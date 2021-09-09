@@ -44,10 +44,7 @@ class Marker(Element):
     """
     A marker element
 
-    Attributes
-    ----------
-    label : str
-        Name of the element
+    label : str -> Name of the element
     """
     def __init__(self, label):
         self.label = label
@@ -65,12 +62,8 @@ class Drift(Element):
     """
     A drift element. The flag EXACT enables exact hamiltonian pass method
 
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    length : float
-        Length of the drift
+    label  : str   -> Name of the element
+    length : float -> Length of the drift
     """
     def __init__(self, label, length=0.):
         self.label  = label
@@ -99,14 +92,9 @@ class Multipole(Element):
     """
     A thin multipole element.
 
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    knl, ksl : list
-        List of normal and skew multipoles
-    dx, dy : float
-        Horizontal and vertical alignment offset
+    label    : str   -> Name of the element
+    knl, ksl : list  -> List of normal and skew multipoles
+    dx, dy   : float -> Horizontal and vertical alignment offset
     """
     def __init__(self, label, knl=[], ksl=[], dx=0., dy=0.):
         self.label = label
@@ -166,18 +154,11 @@ class Quadrupole(Element):
     """
     A thick normal quadrupole element.
 
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    slices : float
-        Number of slices used for 'tea pot' expansion (if KICK flag is set)
-    length : float
-        Length of the element
-    k1 : float
-        Strength of the quadrupolar component
-    dx, dy : float
-        Horizontal and vertical alignment offset
+    label  : str   -> Name of the element
+    slices : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+    length : float -> Length of the element
+    k1     : float -> Strength of the quadrupolar component
+    dx, dy : float -> Horizontal and vertical alignment offset
     """
     def __init__(self, label, slices=None, length=0., k1=0., dx=0., dy=0.):
         self.label  = label
@@ -215,24 +196,15 @@ class Quadrupole(Element):
 
 class Sbend(Element):
     """
-    An S type bending magnet.
+    An S type bending magnet with edge focusing.
 
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    slices : float
-        Number of slices used for 'tea pot' expansion (if KICK flag is set)
-    length : float
-        Length of the element
-    angle : float
-        Bending angle in radiants
-    e1, e2 : float
-         Entry and exit angle
-    k1 : float
-        Strength of the quadrupolar component
-    dx, dy : float
-        Horizontal and vertical alignment offset
+    label  : str   -> Name of the element
+    slices : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+    length : float -> Length of the element
+    angle  : float -> Bending angle in radiants
+    e1, e2 : float -> Entry and exit angle
+    k1     : float -> Strength of the quadrupolar component
+    dx, dy : float -> Horizontal and vertical alignment offset
     """
     def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0.):
         self.label  = label
@@ -276,24 +248,15 @@ class Sbend(Element):
 
 class Rbend(Element):
     """
-    A rectangular bending magnet.
+    A rectangular bending magnet with edge focusing.
     
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    slices : float
-        Number of slices used for 'tea pot' expansion (if KICK flag is set)
-    length : float
-        Length of the element
-    angle : float
-        Bending angle in radiants
-    e1, e2 : float
-         Entry and exit angle
-    k1 : float
-        Strength of the quadrupolar component
-    dx, dy : float
-        Horizontal and vertical alignment offset
+    label  : str   -> Name of the element
+    slices : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+    length : float -> Length of the element
+    angle  : float -> Bending angle in radiants
+    e1, e2 : float -> Entry and exit angle
+    k1     : float -> Strength of the quadrupolar component
+    dx, dy : float -> Horizontal and vertical alignment offset
     """
     def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0.):
         self.label  = label
@@ -346,20 +309,12 @@ class Sextupole(Element):
     """
     A thick sextupole ('Tea-pot expansion used)
  
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    slices : float
-        Number of slices used for 'tea pot' expansion
-    length : float
-        Length of the element
-    k2 : float
-        Normal sextupolar component
-    k2s : float
-         Skew sextupolar component
-    dx, dy : float
-        Horizontal and vertical alignment offset
+    label  : str   ->  Name of the element
+    slices : float ->  Number of slices used for 'tea pot' expansion
+    length : float ->  Length of the element
+    k2     : float ->  Normal sextupolar component
+    k2s    : float ->  Skew sextupolar component
+    dx, dy : float ->  Horizontal and vertical alignment offset
     """
     def __init__(self, label, length=0., slices=None, k2=0., k2s=0., dx=0., dy=0.):
         self.label  = label
@@ -401,20 +356,12 @@ class Octupole(Element):
     """
     A thick octupole ('Tea-pot expansion used)
  
-    Attributes
-    ----------
-    label : str
-        Name of the element
-    slices : float
-        Number of slices used for 'tea pot' expansion
-    length : float
-        Length of the element
-    k2 : float
-        Normal octupolar component
-    k2s : float
-         Skew octupolar component
-    dx, dy : float
-        Horizontal and vertical alignment offset
+    label  : str   -> Name of the element
+    slices : float -> Number of slices used for 'tea pot' expansion
+    length : float -> Length of the element
+    k2     : float -> Normal octupolar component
+    k2s    : float -> Skew octupolar component
+    dx, dy : float -> Horizontal and vertical alignment offset
     """
     def __init__(self, label, length=0., slices=None, k3=0., k3s=0., dx=0., dy=0.):
         self.label  = label
