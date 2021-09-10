@@ -15,5 +15,7 @@
 
                   Developed by Michele Carla',
     based on the initial work of Manu Canals and Michele Carla'
+           with the support of ALBA (www.cells.es)
+
                 https://github.com/mcarla/ufo
 
