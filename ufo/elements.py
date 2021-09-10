@@ -128,7 +128,7 @@ class Multipole(Element):
         if knl == None: knl = self.knl.copy() #Explicit comparison against None
         if ksl == None: ksl = self.ksl.copy() #to discriminate from []
         dx  = dx  or self.dx
-        dy  = dx  or self.dy
+        dy  = dy  or self.dy
 
         for prm, value in kwargs.items():
             if prm[0] == 'k' and prm[1:].isdigit(): #Normal
@@ -174,7 +174,7 @@ class Quadrupole(Element):
         length = length or self.length
         k1     = k1     or self.k1
         dx     = dx     or self.dx
-        dy     = dx     or self.dy
+        dy     = dy     or self.dy
  
         code = []
         f0 = 0.
@@ -226,7 +226,7 @@ class Sbend(Element):
         e1     = e1     or self.e1
         e2     = e2     or self.e2
         dx     = dx     or self.dx
-        dy     = dx     or self.dy
+        dy     = dy     or self.dy
  
         code = []
         f0 = 0.
@@ -278,7 +278,7 @@ class Rbend(Element):
         e1     = e1     or self.e1
         e2     = e2     or self.e2
         dx     = dx     or self.dx
-        dy     = dx     or self.dy
+        dy     = dy     or self.dy
  
         code = []
         f0 = 0.
@@ -332,7 +332,7 @@ class Sextupole(Element):
         k2     = k2     or self.k2
         k2s    = k2s    or self.k2s
         dx     = dx     or self.dx
-        dy     = dx     or self.dy
+        dy     = dy     or self.dy
 
         code = []
         f0 = 0.
@@ -379,7 +379,7 @@ class Octupole(Element):
         k3     = k3     or self.k3
         k3s    = k3s    or self.k3s
         dx     = dx     or self.dx
-        dy     = dx     or self.dy
+        dy     = dy     or self.dy
 
         code = []
         f0 = 0.
