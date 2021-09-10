@@ -176,7 +176,7 @@ def dump(lattice, path, style='mad', beam=Beam()): #style can be 'mad', 'elegant
     if style == 'at':
         dump_file.write('function {}\n\n'.format(path.split(".")[0]))
         dump_file.write('global FAMLIST THERING GLOBVAL;\n')
-        dump_file.write(f'E_0 = {beam.mass};\n')
+        dump_file.write(f'E_0 = {beam.particle_mass};\n')
         dump_file.write(f'GLOBVAL.E0 = {beam.energy}-E_0;\n')
         dump_file.write("GLOBVAL.LatticeFile = '{}';\n".format(path.split(".")[0]))
         dump_file.write('FAMLIST = cell(0);\n')
