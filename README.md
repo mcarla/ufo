@@ -3,7 +3,7 @@
  
                           \__/  ^__^
                           (oo)  (oo)
-                   _/--\  /--\_
+                         _/--\  /--\_
                    _.--===0=0====0=0===--._
                   (________________________)
                        /  \________/  \
@@ -26,7 +26,7 @@ The following packages are required to run UFO:
 
 - python 3.5 or later
 - numpy
-- pyopencl with a properly configured OpenCL back-end
+- pyopencl at least one properly configured OpenCL back-end
 - ipython3 is required for interactive use only
 
 
