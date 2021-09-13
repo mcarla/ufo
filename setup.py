@@ -12,6 +12,7 @@ setuptools.setup(
     license="BSD",
     url="https://github.com/",
     packages=setuptools.find_packages(),
+    install_requires=['pyopencl'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
