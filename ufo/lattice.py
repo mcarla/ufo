@@ -107,7 +107,7 @@ class Line(list):
             #Current element parameters, 'i' is the absolute parameter index
             #Match elemet label or index
             prms = [i for (i, p) in enumerate(parameters) if p[0]==element.label or p[0]==idx]
-            prms = {parameters[i][1]: f'parameters[idx][{i}]' for i in prms}
+            prms = {parameters[i][1]: f'parameters[{i}]' for i in prms}
 
             prms['flags']    = flags #also flags and fracture need to 
             prms['fracture'] = where #be passed to the element method()

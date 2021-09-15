@@ -80,19 +80,23 @@ class Track():
         self.where = [(idx, flat_line[int(idx)]) for idx in where] #Warning this is not so nice!!!
 
         count = self.count * turns
-        if count < 1:
+        if count < 0:
             raise Exception("No valid observation points found in 'where'")
 
         kernel  = f"#define ufloat {'double' if flags & DOUBLE_PRECISION else 'float'}\n"
-        kernel += f"__kernel void run(__global ufloat parameters[][{len(parameters)}], __global int *pool_idx, __global ufloat tracks[][{count}][6]) {{\n"
+        kernel += f"#define PARAMETERS_COUNT {len(parameters)}\n"
+
+        kernel += f"__kernel void run(__global ufloat pool[][PARAMETERS_COUNT], __global int *pool_idx, __global ufloat tracks[][{count}][6]) {{\n"
+        kernel +=  "    __global ufloat *parameters;\n"
         kernel +=  "    ufloat x, y, z, px, py, dp;\n"
         kernel +=  "    ufloat oodppo;\n" #One Over DP Plus One -> 1/(dp+1)
         kernel +=  "    int idx = get_global_id(0);\n" #First particle has id = thread id
         kernel +=  "    int track_idx;\n"
         kernel +=  "    while (1) {\n" #Loop over particles
+        kernel +=  "        parameters = pool[idx];\n"
 
         for p in ['x', 'px', 'y', 'py', 'z', 'dp']:
-            aux = f"parameters[idx][{parameters.index(p)}]" if p in parameters else 0
+            aux = f"parameters[{parameters.index(p)}]" if p in parameters else 0
             kernel += f"        {p}  = {aux};\n"
         if fived:
             kernel += f"        z  = 0.;\n"
@@ -111,14 +115,14 @@ class Track():
         kernel +=  "    }\n"
         kernel += "}\n"
 
-        self.track = np.zeros([particles, count, 6], dtype=ufloat)
+        self.tracks = np.zeros([particles, count, 6], dtype=ufloat)
         self.src = kernel
         self.kernel = cl.Program(self.ctx, kernel).build(options=options)
 
         mf = cl.mem_flags
         self.__dev_pool_idx = cl.Buffer(self.ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=self.pool_idx)
         self.__dev_pool     = cl.Buffer(self.ctx, mf.READ_ONLY  | mf.COPY_HOST_PTR, hostbuf=self.parameters)
-        self.__dev_track    = cl.Buffer(self.ctx, mf.WRITE_ONLY, self.track.nbytes)
+        self.__dev_tracks   = cl.Buffer(self.ctx, mf.WRITE_ONLY, self.tracks.nbytes)
 
     def run(self, threads=1):
         """
@@ -132,7 +136,7 @@ class Track():
         cl.enqueue_copy(self.queue, self.__dev_pool_idx, self.pool_idx) #Copy to device
         cl.enqueue_copy(self.queue, self.__dev_pool,     self.parameters)
 
-        evt = self.kernel.run(self.queue, (threads, ), None, self.__dev_pool, self.__dev_pool_idx, self.__dev_track) #Run the kernel
+        evt = self.kernel.run(self.queue, (threads, ), None, self.__dev_pool, self.__dev_pool_idx, self.__dev_tracks) #Run the kernel
 
-        cl.enqueue_copy(self.queue, self.track, self.__dev_track) #Copy back results
+        cl.enqueue_copy(self.queue, self.tracks, self.__dev_tracks) #Copy back results
 

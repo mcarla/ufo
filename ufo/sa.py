@@ -89,16 +89,20 @@ class StableAperture():
         full_turn = ''.join(line.method(flags=flags, parameters=parameters))
 
         kernel  = f"#define ufloat {'double' if flags & DOUBLE_PRECISION else 'float'}\n"
-        kernel += f"__kernel void run(__global ufloat parameters[][{len(parameters)}], __global int *pool_idx, __global uint *lost) {{\n"
+        kernel += f"#define PARAMETERS_COUNT {len(parameters)}\n"
+
+        kernel += f"__kernel void run(__global ufloat pool[][PARAMETERS_COUNT], __global int *pool_idx, __global uint *lost) {{\n"
+        kernel +=  "    __global ufloat *parameters;\n"
         kernel +=  "    ufloat x, y, z, px, py, dp;\n"
         kernel +=  "    ufloat fracture;\n"
         kernel +=  "    ufloat oodppo;\n" #One Over DP Plus One -> 1/(dp+1)
         kernel +=  "    int turn, idx = get_global_id(0);\n" #First particle has id = thread id
         kernel +=  "    while (1) {\n" #Loop over particles
+        kernel +=  "        parameters = pool[idx];\n"
         kernel +=  "        lost[idx] = 0;\n" #Will stay 0 if stable
 
         for p in ['x', 'px', 'y', 'py', 'z', 'dp']:
-            aux = f"parameters[idx][{parameters.index(p)}]" if p in parameters else 0
+            aux = f"parameters[{parameters.index(p)}]" if p in parameters else 0
             kernel += f"        {p}  = {aux};\n"
         if fived:
             kernel += f"        z  = 0.;\n"
