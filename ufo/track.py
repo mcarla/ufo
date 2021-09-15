@@ -68,19 +68,17 @@ class Track():
  
         methods = line.method(fracture=where, flags=flags, parameters=parameters)
         code = dump.join(methods) #Interleave 'dump' between methods
-        self.count = len(where) - 1
+        self.count = len(where)
         self.where = where #WARNING: dopo lo riassegno, forse posso toglierlo
 
         if -1 in where:
-            self.count += 1
-            #self.where.append((-1, -1))
             code += dump
 
         flat_line = line.flatten()
         self.where = [(idx, flat_line[int(idx)]) for idx in where] #Warning this is not so nice!!!
 
         count = self.count * turns
-        if count < 0:
+        if count < 1:
             raise Exception("No valid observation points found in 'where'")
 
         kernel  = f"#define ufloat {'double' if flags & DOUBLE_PRECISION else 'float'}\n"

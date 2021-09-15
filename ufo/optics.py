@@ -18,7 +18,7 @@ from . import track
 
 import ufo
 
-class Optics(track.Track):
+class Optics():
     """
     Compute betatron and dispersion function of a given line with periodic or
     user specified boundary conditions.
@@ -85,13 +85,17 @@ class Optics(track.Track):
             raise Exception("No valid observation points found in 'where'")
 
         kernel  = f"#define ufloat {'double' if flags & DOUBLE_PRECISION else 'float'}\n"
-        kernel += f"__kernel void run(__global ufloat parameters[][{len(parameters)}], __global int *pool_idx, __global ufloat tracks[][{self.count}][6]) {{\n"
+        kernel += f"#define PARAMETERS_COUNT {len(parameters)}\n"
+
+        kernel += f"__kernel void run(__global ufloat pool[][PARAMETERS_COUNT], __global int *pool_idx, __global ufloat tracks[][{self.count}][6]) {{\n"
+        kernel +=  "    __global ufloat *parameters;\n"
         kernel +=  "    ufloat x, y, z, px, py, dp;\n"
         kernel +=  "    ufloat oodppo;\n" #One Over DP Plus One -> 1/(dp+1)
         kernel +=  "    int particle_idx = get_global_id(0);\n" #First particle has id = thread id
         kernel +=  "    int idx = 0;\n"
         kernel +=  "    int track_idx;\n"
         kernel +=  "    while (1) {\n" #Loop over particles
+        kernel +=  "        parameters = pool[idx];\n"
 
         kernel += f"        x = y = z = px = py = dp = 0.;\n"
         kernel += f"        if (particle_idx == 0) {{x  = 1.; y  = 1.;}}\n"
@@ -99,7 +103,7 @@ class Optics(track.Track):
         kernel += f"        if (particle_idx == 2) dp = 1.;\n"
 
         if 'dp' in parameters:
-            kernel += f"        dp += parameters[0][{parameters.index('dp')}];\n"
+            kernel += f"        dp += parameters[{parameters.index('dp')}];\n"
 
         kernel +=  "        oodppo = 1. / (dp + 1.);\n"
         kernel +=  "        track_idx = 0;\n"
