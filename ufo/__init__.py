@@ -6,6 +6,7 @@ from ufo.constants import *
 from ufo.track import Track
 from ufo.optics import Optics
 from ufo.sa import StableAperture
+from ufo.co import ClosedOrbit
 from ufo.radiation import emittance, RadiationIntegrals
 from ufo.chroma import chromaticity
 from ufo.rdt import rdt
@@ -20,6 +21,8 @@ DEFAULT_OCTUPOLE_SLICES   = 4
 
 DEFAULT_CL_OPTIONS = '-cl-fast-relaxed-math -cl-mad-enable'
 DEFAULT_CONTEXT = context(0)
+
+__all__ = ['Lattice', 'Beam', 'Line', 'Track']
 
 try:
     __IPYTHON__
