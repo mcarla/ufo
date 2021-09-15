@@ -89,28 +89,12 @@ as required for example to compute a response matrix, where the same simulation 
 A few examples
 --------------
 
-### Twiss parameters
-
-In the following example the periodic optics functions for a simple FODO channel are computed.
-The positions at which position dependent functions (betatron amplitudes, dispersion...) are evaluated, are specified as a list of float through the keyword argument 'where'. The integer part of each float represent the element index (in this case 1, the second element which happen to be a drift), while the fractional part represents a fraction of the length of the selected elemnt. Therefore in this example the functions will be evaluated in the middle of the first sdrift (to indicate the end of the line the jolly identifier -1 can be used):
-
-```
-import ufo
-
-lat = ufo.Lattice(path='fodo.mad')
-opt = ufo.Optics(lat.RING, where=[1.5], periodic=True)
-opt.run()
-```
-
-Results can be accessed through the class attributes: `bx, by, ax, ay, dx, dy, qx, qy` (i.e. `opt.qx`)
-Note that when computing periodic solutions optics functions are always computed also at the end of the line.
-
 ### Closed orbit
 
 Closed orbit calculation is carried out by the ClosedOrbit class.
-In this example the computation is repeated 10 times for 10 different random horizontal misalignment of `QD`.
-note that if `QD` appears multiple times in the lattice, the same `dx` error would be applied for each item.
-To point a specific element the element-index number can be used (the position in the lattice)
+In this example the computation is repeated 10 times for 10 different random horizontal misalignment of 'QD'.
+note that if 'QD' appears multiple times in the lattice, the same 'dx' error would be applied to the entire family.
+To point a specific element, the element-index number can be used (the position in the lattice)
 
 ```
 import ufo
@@ -127,4 +111,21 @@ for i in range(count):
 orbit.run(threads=count)
 print(orbit.orbits)
 ```
+
+
+### Twiss parameters
+
+In the following example the periodic optics functions for a simple FODO channel are computed.
+The positions at which position dependent functions (betatron amplitudes, dispersion...) are evaluated, are specified as a list of float through the keyword argument 'where'. The integer part of each float represent the element index (in this case 1, the second element which happen to be a drift), while the fractional part represents a fraction of the length of the selected elemnt. Therefore in this example the functions will be evaluated in the middle of the first sdrift (to indicate the end of the line the jolly identifier -1 can be used):
+
+```
+import ufo
+
+lat = ufo.Lattice(path='fodo.mad')
+opt = ufo.Optics(lat.RING, where=[1.5], periodic=True)
+opt.run()
+```
+
+Results can be accessed through the class attributes: `bx, by, ax, ay, dx, dy, qx, qy` (i.e. `opt.qx`)
+Note that when computing periodic solutions optics functions are always computed also at the end of the line.
 
