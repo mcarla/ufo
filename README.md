@@ -125,25 +125,26 @@ import numpy
 
 optics = ufo.Lattice(path='alba.mad')
 
-count = 12
+count = 12 #Simulate a grid of 12x12 particles
 
 parameters = ['x', 'y', ('SF1', 'k2')]
-sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000, flags=ufo.FIVED, parameters=parameters, dp=0.)
+sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000,
+                        flags=ufo.FIVED, parameters=parameters, dp=0.)
 
 x = numpy.linspace(-0.04, 0.04, num=count) #Initial particle coordinates
 y = numpy.linspace(-0.04, 0.04, num=count) #Are arranged on a grid
-xx, yy = np.meshgrid(x, y, sparse=False)
+xx, yy = numpy.meshgrid(x, y, sparse=False)
 
 sa.parameters[:, 0] = xx.flatten()
 sa.parameters[:, 1] = yy.flatten()
 sa.parameters[:, 2] = 25.7971933671 #K2 of SF1
 
-sa.run(threads=count*count)
+sa.run(threads=count**2)
 print('\n        Dynamic aperture with nominal parameters:\n')
 print(sa.lost.reshape([count, count]))
 
 sa.parameters[:, 2] = 25.7971933671 * 2.0 #K2 let's double the K2 of SF1
-sa.run(threads=count*count)
+sa.run(threads=count**2)
 
 print('\n        Dynamic aperture with double strength for SF1:\n')
 print(sa.lost.reshape([count, count]))
