@@ -98,20 +98,56 @@ To point a specific element, the element-index number can be used (the position 
 
 ```
 import ufo
+import numpy
 
-fodo = ufo.Lattice(path='../optics/fodo.mad')
+fodo = ufo.Lattice(path='fodo.mad')
 
 count = 10
 parameters = [('QD', 'dx')]
 orbit = ufo.ClosedOrbit(fodo.RING, particles=count, parameters=parameters)
 
 for i in range(count):
-    orbit.parameters[i] = np.random.randn() * 1e-3
+    orbit.parameters[i] = numpy.random.randn() * 1e-3
 
 orbit.run(threads=count)
 print(orbit.orbits)
 ```
 
+### Dynamic Aperture
+
+Dynamic aperture can be simulated through the StableAperture class.
+The parameters 'x' and 'y' allow to set the initial particles coordinates.
+The output of the simulation is the number of turns each particle survived and can be accessed through the attribute `lost`. 
+
+```
+import ufo
+import numpy
+
+optics = ufo.Lattice(path='alba.mad')
+
+count = 12
+
+parameters = ['x', 'y', ('SF1', 'k2')]
+sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000, flags=ufo.FIVED, parameters=parameters, dp=0.)
+
+x = numpy.linspace(-0.04, 0.04, num=count) #Initial particle coordinates
+y = numpy.linspace(-0.04, 0.04, num=count) #Are arranged on a grid
+xx, yy = np.meshgrid(x, y, sparse=False)
+
+sa.parameters[:, 0] = xx.flatten()
+sa.parameters[:, 1] = yy.flatten()
+sa.parameters[:, 2] = 25.7971933671 #K2 of SF1
+
+sa.run(threads=count*count)
+print('\n        Dynamic aperture with nominal parameters:\n')
+print(sa.lost.reshape([count, count]))
+
+sa.parameters[:, 2] = 25.7971933671 * 2.0 #K2 let's double the K2 of SF1
+sa.run(threads=count*count)
+
+print('\n        Dynamic aperture with double strength for SF1:\n')
+print(sa.lost.reshape([count, count]))
+```
 
 ### Twiss parameters
 
