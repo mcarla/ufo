@@ -1,4 +1,4 @@
-import elements, optics, optics2, optics3, thick_vs_kick, chroma, radiation, tracking, align
+import elements, optics, optics2, optics3, thick_vs_kick, chroma, radiation, tracking, align, closed_orbit
 
 print("\n"+ 80*"#" + "\n" + 35*" " + "LOAD ELEMENTS + PASS METHOD\n" + 80*"#" + "\n")
 elements.test()
@@ -26,4 +26,7 @@ tracking.test()
 
 print("\n"+ 80*"#" + "\n" + 35*" " + "ALIGN\n" + 80*"#" + "\n")
 align.test()
+
+print("\n"+ 80*"#" + "\n" + 35*" " + "CLOSED ORBIT\n" + 80*"#" + "\n")
+closed_orbit.test()
 
