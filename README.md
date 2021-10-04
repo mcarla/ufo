@@ -186,8 +186,7 @@ UFO support several elements, each element is identified by a label. Furthermore
 For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
 
 
-slices:      Number of slices used in Teapot expansion         
--------
+**slices:**     Number of slices used in Teapot expansion         
 length:     Length of the element                             
 -------
 angle:       Bending angle                                     
