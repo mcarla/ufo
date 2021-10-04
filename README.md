@@ -229,8 +229,9 @@ qf.dknl = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
 Or with a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multipole. Note that in this case the component must have been previously defined when the element was instantiated or with the vector notation
 
 ```
-qf = ufo.Quadrupole('qf', length=1, k1=2, dknl=[0, 0, 0])
 #if 'knl' has length < 3, the next instruction will fail
+qf = ufo.Quadrupole('qf', length=1, k1=2, dknl=[0, 0, 0])
+
 qf.dk2 = 0.3 #has the same effect as qf.dknl = [0., 0., 0.3]
 ```
 
