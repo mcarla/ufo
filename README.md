@@ -186,15 +186,15 @@ UFO support several elements, each element is identified by a label. Furthermore
 For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
 
 
-| slices      | Number of slices used in Teapot expansion         |
-| length      | Length of the element                             |
-| angle       | Bending angle                                     |
-| k1          | Magnetic gradient normalized by the beam rigidity |
-| e1 / e2     | Entry / exit pole angle                           |
-| knl / ksl   | Normal and skew field multipolar components       |
-| k2 / k2s    | Normal and skew sextupolar component              |
-| k3 / k3s    | Normal and skew octupolar component               |
-| dx / dy     | Horizontal and vertical alignement errors         |
-| dknl / dksl | Normal and skew multipolar field errors           |
+slices      Number of slices used in Teapot expansion         
+length      Length of the element                             
+angle       Bending angle                                     
+k1          Magnetic gradient normalized by the beam rigidity 
+e1 / e2     Entry / exit pole angle                           
+knl / ksl   Normal and skew field multipolar components       
+k2 / k2s    Normal and skew sextupolar component              
+k3 / k3s    Normal and skew octupolar component               
+dx / dy     Horizontal and vertical alignement errors         
+dknl / dksl Normal and skew multipolar field errors           
 
 
