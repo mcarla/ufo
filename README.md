@@ -183,5 +183,5 @@ UFO support several elements, each element is identified by a label. Furthermore
 | Sextupole  |    x   |   x    |       |       |         |           |    x     |          |    x    |      x      |
 | Octupole   |    x   |   x    |       |       |         |           |          |    x     |    x    |      x      |
 
-For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have effect only when the 'KICK' flag is set to True (Teapot expansioin)
+For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
 
