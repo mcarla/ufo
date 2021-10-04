@@ -220,7 +220,7 @@ qf.dx = 1e-3   #displace horizontally 'qf' by 1mm
 qf.k1 *= 1.1   #increase k1 by 10%
 ```
 
-Field multipoles (`knl, ksl, dknl and dksl`) can be accessed both as a vector:
+Field multipoles `knl, ksl, dknl and dksl` can be accessed both as a vector:
 
 ```
 qf.dknl = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
