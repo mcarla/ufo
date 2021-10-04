@@ -169,7 +169,8 @@ Note that when computing periodic solutions optics functions are always computed
 Supported elements and parameters
 ---------------------------------
 
-UFO support several elements, each element is identified by a label. Furthermore the following parameters are supported by each element:
+UFO support several elements (drift, quarupole, dipole...). Each element is identified by a unique label,
+furthermore the following keyword parameters are supported by each element:
 
 
 |            | slices | length | angle |  k1   | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dknl / dksl |
@@ -188,22 +189,47 @@ For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have 
 
 **slices:**      Number of slices used in Teapot expansion         
 
-**length:**      Length of the element                             
+**length:**      Length of the element [m]
 
-**angle:**       Bending angle                                     
+**angle:**       Bending angle [rad]
 
-**k1:**          Magnetic gradient normalized by the beam rigidity
+**k1:**          Magnetic gradient normalized by the beam rigidity [m^-2]
  
-**e1 / e2:**     Entry / exit pole angle                           
+**e1 / e2:**     Entry / exit pole angle [rad]
 
-**knl / ksl:**   Normal and skew field multipolar components       
+**knl / ksl:**   Integrated normal and skew field multipolar components [m^-n]
 
-**k2 / k2s:**    Normal and skew sextupolar component              
+**k2 / k2s:**    Normal and skew sextupolar component [m^-3]       
 
-**k3 / k3s:**    Normal and skew octupolar component               
+**k3 / k3s:**    Normal and skew octupolar component [m^-4]        
 
-**dx / dy:**     Horizontal and vertical alignement errors         
+**dx / dy:**     Horizontal and vertical alignement errors [m]        
 
-**dknl / dksl:** Normal and skew multipolar field errors           
+**dknl / dksl:** Integrated normal and skew multipolar field errors [m^-n] 
 
+For example a new quadrupole with length 1 m and strength 2 m^-1 can be instantiated with:
+
+```
+qf = ufo.Quadrupole('qf', length=1, k1=2)
+```
+
+Afterwards, element parameters can be accessed and changed with:
+
+```
+qf.dx = 1e-3   #displace horizontally 'qf' by 1mm
+qf.k1 *= 1.1   #increase k1 by 10%
+```
+
+Field multipoles (`knl, ksl, dknl and dksl`) can be accessed both as a vector:
+
+```
+qf.dknl = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
+```
+
+Or with a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multipole. Note that in this case the component must have been previously defined when the element was instantiated or with the vector notation
+
+```
+qf = ufo.Quadrupole('qf', length=1, k1=2, knl=[0, 0, 0]) #if 'knl' has length < 3, the next instruction will fail
+qf.dk2 = 0.3 #has the same effect as the previous command
+```
 
