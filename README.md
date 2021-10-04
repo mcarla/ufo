@@ -166,3 +166,18 @@ opt.run()
 Results can be accessed through the class attributes: `bx, by, ax, ay, dx, dy, qx, qy` (i.e. `opt.qx`)
 Note that when computing periodic solutions optics functions are always computed also at the end of the line.
 
+Supported elements and parameters
+---------------------------------
+UFO support several elements:
+
+|            | length | angle | k1 | e1/e2 | knl/ksl | k2/k2s | k3/k3s | dx/dy | dknl/dksl |
+|       ---: | :----: |       |    |       |         |        |        |       |           |
+| Marker     |        |       |    |       |         |        |        |       |           |
+| Drift      |        |       |    |       |         |        |        |       |           |
+| Mutlipole  |        |       |    |       |         |        |        |       |           |
+| Quadrupole |        |       |    |       |         |        |        |       |           |
+| Sbend      |        |       |    |       |         |        |        |       |           |
+| Rbend      |        |       |    |       |         |        |        |       |           |
+| Sextupole  |        |       |    |       |         |        |        |       |           |
+| Octupole   |        |       |    |       |         |        |        |       |           |
+
