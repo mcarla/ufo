@@ -172,14 +172,14 @@ Supported elements and parameters
 UFO support several elements:
 
 
-|            | length | angle |  k1 | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dknl / dksl |
-|       ---: |  ---   |  ---  | --- |   ---   |    ---    |   ---    |   ---    |   ---   |     ---     |
-| Marker     |        |       |     |         |           |          |          |         |             |
-| Drift      |   x    |       |     |         |           |          |          |         |             |
-| Mutlipole  |        |       |     |         |     x     |          |          |    x    |             |
-| Quadrupole |   x    |       |  x  |         |           |          |          |    x    |      x      |
-| Sbend      |   x    |   x   |  x  |    x    |           |          |          |    x    |      x      |
-| Rbend      |   x    |   x   |  x  |    x    |           |          |          |    x    |      x      |
-| Sextupole  |   x    |       |     |         |           |    x     |          |    x    |      x      |
-| Octupole   |   x    |       |     |         |           |          |    x     |    x    |      x      |
+|            | length | angle |  k1   | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dknl / dksl |
+|       ---: |  :---: | :---: | :---: |   ---   |    ---    |   ---    |   ---    |   ---   |     ---     |
+| Marker     |        |       |       |         |           |          |          |         |             |
+| Drift      |   x    |       |       |         |           |          |          |         |             |
+| Mutlipole  |        |       |       |         |     x     |          |          |    x    |             |
+| Quadrupole |   x    |       |  x    |         |           |          |          |    x    |      x      |
+| Sbend      |   x    |   x   |  x    |    x    |           |          |          |    x    |      x      |
+| Rbend      |   x    |   x   |  x    |    x    |           |          |          |    x    |      x      |
+| Sextupole  |   x    |       |       |         |           |    x     |          |    x    |      x      |
+| Octupole   |   x    |       |       |         |           |          |    x     |    x    |      x      |
 
