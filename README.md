@@ -231,6 +231,6 @@ Or with a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multip
 ```
 qf = ufo.Quadrupole('qf', length=1, k1=2, dknl=[0, 0, 0])
 #if 'knl' has length < 3, the next instruction will fail
-qf.dk2 = 0.3 #has the same effect as the previous command
+qf.dk2 = 0.3 #has the same effect as qf.dknl = [0., 0., 0.3]
 ```
 
