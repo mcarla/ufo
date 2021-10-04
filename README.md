@@ -169,17 +169,19 @@ Note that when computing periodic solutions optics functions are always computed
 Supported elements and parameters
 ---------------------------------
 
-UFO support several elements:
+UFO support several elements, each element is identified by a label. Furthermore the following parameters are supported by each element:
 
 
-|            | length | angle |  k1   | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dknl / dksl |
-|       ---: |  :---: | :---: | :---: |   ---   |    ---    |   ---    |   ---    |   ---   |     ---     |
-| Marker     |        |       |       |         |           |          |          |         |             |
-| Drift      |   x    |       |       |         |           |          |          |         |             |
-| Mutlipole  |        |       |       |         |     x     |          |          |    x    |             |
-| Quadrupole |   x    |       |  x    |         |           |          |          |    x    |      x      |
-| Sbend      |   x    |   x   |  x    |    x    |           |          |          |    x    |      x      |
-| Rbend      |   x    |   x   |  x    |    x    |           |          |          |    x    |      x      |
-| Sextupole  |   x    |       |       |         |           |    x     |          |    x    |      x      |
-| Octupole   |   x    |       |       |         |           |          |    x     |    x    |      x      |
+|            | slices | length | angle |  k1   | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dknl / dksl |
+|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |   :---:   |  :---:   |  :---:   |  :---:  |    :---:    |
+| Marker     |        |        |       |       |         |           |          |          |         |             |
+| Drift      |        |   x    |       |       |         |           |          |          |         |             |
+| Mutlipole  |        |        |       |       |         |     x     |          |          |    x    |             |
+| Quadrupole |    x   |   x    |       |   x   |         |           |          |          |    x    |      x      |
+| Sbend      |    x   |   x    |   x   |   x   |    x    |           |          |          |    x    |      x      |
+| Rbend      |    x   |   x    |   x   |   x   |    x    |           |          |          |    x    |      x      |
+| Sextupole  |    x   |   x    |       |       |         |           |    x     |          |    x    |      x      |
+| Octupole   |    x   |   x    |       |       |         |           |          |    x     |    x    |      x      |
+
+For Quadrupole, Sbend and Rbend the 'slices' parameters and 'dknl / dksl' parameters have effect only when the 'KICK' flag is set to True (Teapot expansioin)
 
