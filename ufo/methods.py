@@ -13,6 +13,12 @@ RADIATION        = 1 << 4
 DOUBLE_PRECISION = 1 << 5
 ACHROMATIC       = 1 << 6
 
+def copy_multipoles_and_pad(m, min_order):
+    m = m.copy()
+    m += ['0.'] * max(len(m), min_order)
+
+    return m
+
 def align(dx, dy): #MAD-X definitions
     fragment  = (f'x -= {dx};\n'
                  f'y -= {dy};\n')
@@ -57,40 +63,45 @@ def kick(flags, knl, ksl):
         n = len(ksl) #Avoid non-linear terms when LINEAR
         max_order = min(n, 2) if (flags & LINEAR) else n 
 
-        dpx =  '0.'
         dpy = f'{ksl[max_order - 1]} {"" if flags & ACHROMATIC else "* oodppo"}'
+        dpx =  '0.'
 
         for order in range(max_order - 1, 0, -1):
             aux = f'({dpx} * y + ({dpy} * x)) / {order}'
             dpx = f'({dpx} * x - ({dpy} * y)) / {order}'
             dpy = f'({ksl[order - 1]} {"" if flags & ACHROMATIC else "* oodppo"} + {aux})'
+
         fragment += f'px -= {dpx};\npy += {dpy};\n\n'
 
     return fragment
 
 #https://accelconf.web.cern.ch/IPAC2013/papers/mopwo027.pdf
-def teapot(flags, length, slices, knl, ksl): #Using Teapot slicing
-    edge  = f'({length} / 2.)' if slices == 1 else f'({length} / (2 * (1 + {slices})))' #Edge drifts length
-    inner = f'({length} - 2. * {edge}) / {slices - 1.}' #Inner drifts length
+def teapot(flags, length, slices, knl, ksl, angle=0): #Using Teapot slicing
+    outer = f'({length} / 2.)' if slices == 1 else f'({length} / (2 * (1 + {slices})))' #Outer drifts length
+    inner = f'({length} - 2. * {outer}) / {slices - 1.}' #Inner drifts length
 
-    weak_edge  = f'px -= x * (({knl[0]}) * ({knl[0]}) * ({edge})  / ({length}) / ({length}));\n' #Weak focusing
-    weak_inner = f'px -= x * (({knl[0]}) * ({knl[0]}) * ({inner}) / ({length}) / ({length}));\n'
+    #Weak focusing
+    weak = f'px -= x * (({angle}) * ({angle}) * ({length})/{slices} / ({length}) / ({length}));\n'
 
     knl = [f'({k}*{length}/{slices})' for k in knl]
     ksl = [f'({k}*{length}/{slices})' for k in ksl]
 
-    fragment  = weak_edge + drift(flags, edge)
+    fragment = drift(flags, outer)
     for count in range(slices - 1):
-        fragment += kick(flags, knl, ksl)
-        fragment += weak_inner
+        fragment += kick(flags, knl, ksl) + weak
         fragment += drift(flags, inner)
-    fragment += kick(flags, knl, ksl) + drift(flags, edge) + weak_edge
+
+    fragment += kick(flags, knl, ksl) + weak
+    fragment += drift(flags, outer)
 
     return fragment
 
-def quadrupole(flags, slices, length, k1):
+def quadrupole(flags, slices, length, k1, dknl, dksl):
     if flags & KICK:
-        fragment = teapot(flags, length, slices, [0., k1], [])
+        knl = copy_multipoles_and_pad(dknl, 2)
+        knl[1] = f'({knl[1]} + {k1})'
+
+        fragment = teapot(flags, length, slices, knl, dksl)
 
     else:
         fragment = ('{\n'
@@ -122,9 +133,11 @@ def quadrupole(flags, slices, length, k1):
 
     return fragment
 
-def sbend(flags, slices, length, angle, k1):
+def sbend(flags, slices, length, angle, k1, dknl, dksl):
     if flags & KICK:
-        fragment = teapot(flags, length, slices, [angle, k1], [])
+        knl = copy_multipoles_and_pad(dknl, 2)
+        knl[1] = f'({knl[1]} + {k1})'
+        fragment = teapot(flags, length, slices, knl, dksl, angle)
     else:
         fragment = ('{\n'
                     '    ufloat x0  = x;\n'
@@ -191,6 +204,22 @@ def edge(flags, length, angle, e):
                 '}\n')
 
     return fragment
+
+def sextupole(flags, slices, length, k2, k2s, dknl, dksl):
+    knl = copy_multipoles_and_pad(dknl, 3)
+    ksl = copy_multipoles_and_pad(dksl, 3)
+    knl[2] = f'({knl[2]} + {k2})'
+    ksl[2] = f'({ksl[2]} + {k2s})'
+
+    return teapot(flags, length, slices, knl, dksl)
+
+def octupole(flags, slices, length, k3, k3s, dknl, dksl):
+    knl = copy_multipoles_and_pad(dknl, 4)
+    ksl = copy_multipoles_and_pad(dksl, 4)
+    knl[3] = f'({knl[3]} + {k3})'
+    ksl[3] = f'({ksl[3]} + {k3s})'
+
+    return teapot(flags, length, slices, knl, dksl)
 
 #def cavity(flags, field, frequency, lag):
 #    #field is normalized by pc (reference beam energy)

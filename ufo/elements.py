@@ -127,8 +127,8 @@ class Multipole(Element):
     def method(self, flags=0, fracture=[], knl=None, ksl=None, dx=None, dy=None, **kwargs):
         if knl == None: knl = self.knl.copy() #Explicit comparison against None
         if ksl == None: ksl = self.ksl.copy() #to discriminate from []
-        dx  = dx  or self.dx
-        dy  = dy  or self.dy
+        dx = dx or self.dx
+        dy = dy or self.dy
 
         for prm, value in kwargs.items():
             if prm[0] == 'k' and prm[1:].isdigit(): #Normal
@@ -154,35 +154,40 @@ class Quadrupole(Element):
     """
     A thick normal quadrupole element.
 
-    label  : str   -> Name of the element
-    slices : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
-    length : float -> Length of the element
-    k1     : float -> Strength of the quadrupolar component
-    dx, dy : float -> Horizontal and vertical alignment offset
+    label      : str   -> Name of the element
+    slices     : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+    length     : float -> Length of the element
+    k1         : float -> Strength of the quadrupolar component
+    dx, dy     : float -> Horizontal and vertical alignment offset
+    dknl, dksl : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, slices=None, length=0., k1=0., dx=0., dy=0.):
+    def __init__(self, label, slices=None, length=0., k1=0., dx=0., dy=0., dknl=[], dksl=[]):
         self.label  = label
         self.slices = slices if slices else ufo.DEFAULT_QUADRUPOLE_SLICES
         self.length = length
         self.k1     = k1
         self.dx     = dx
         self.dy     = dy
-        self.parameters = ['length', 'k1', 'dx', 'dy']
+        self.dknl   = dknl
+        self.dksl   = dksl
+        self.parameters = ['length', 'k1', 'dx', 'dy', 'dknl', 'dksl']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, k1=None, dx=None, dy=None):
+    def method(self, flags=0, fracture=[], slices=None, length=None, k1=None, dx=None, dy=None, dknl=None, dksl=None):
         slices = slices or self.slices
         length = length or self.length
         k1     = k1     or self.k1
         dx     = dx     or self.dx
         dy     = dy     or self.dy
+        if dknl == None: dknl = self.dknl.copy() #Explicit comparison against None
+        if dksl == None: dksl = self.dksl.copy() #to discriminate from []
  
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.quadrupole(flags, slices, f'{length} * {(f - f0)}', k1))
+            code.append(methods.quadrupole(flags, slices, f'{length} * {(f - f0)}', k1, dknl, dksl))
             f0 = f
 
-        code[0]  = methods.align(dx, dy) + code[0]
+        code[ 0] = methods.align(dx, dy) + code[0]
         code[-1] = code[-1] + methods.align(f'-({dx})', f'-({dy})')
         return code
 
@@ -198,15 +203,16 @@ class Sbend(Element):
     """
     An S type bending magnet with edge focusing.
 
-    label  : str   -> Name of the element
-    slices : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
-    length : float -> Length of the element
-    angle  : float -> Bending angle in radiants
-    e1, e2 : float -> Entry and exit angle
-    k1     : float -> Strength of the quadrupolar component
-    dx, dy : float -> Horizontal and vertical alignment offset
+    label      : str   -> Name of the element
+    slices     : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+    length     : float -> Length of the element
+    angle      : float -> Bending angle in radiants
+    e1, e2     : float -> Entry and exit angle
+    k1         : float -> Strength of the quadrupolar component
+    dx, dy     : float -> Horizontal and vertical alignment offset
+    dknl, dksl : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0.):
+    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0., dknl=[], dksl=[]):
         self.label  = label
         self.slices = slices if slices else ufo.DEFAULT_BEND_SLICES
         self.length = length
@@ -216,9 +222,11 @@ class Sbend(Element):
         self.e2     = e2
         self.dx     = dx
         self.dy     = dy
-        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy']
+        self.dknl   = dknl
+        self.dksl   = dksl
+        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy', 'dknl', 'dksl']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None):
+    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dknl=None, dksl=None):
         length = length or self.length
         slices = slices or self.slices
         angle  = angle  or self.angle
@@ -227,14 +235,16 @@ class Sbend(Element):
         e2     = e2     or self.e2
         dx     = dx     or self.dx
         dy     = dy     or self.dy
+        if dknl == None: dknl = self.dknl.copy() #Explicit comparison against None
+        if dksl == None: dksl = self.dksl.copy() #to discriminate from []
  
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1))
+            code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1, dknl, dksl))
             f0 = f
 
-        code[0]   = methods.align(dx, dy) + methods.edge(flags, length, angle, e1) + code[0]
+        code[ 0]  = methods.align(dx, dy) + methods.edge(flags, length, angle, e1) + code[0]
         code[-1] += methods.edge(flags, length, angle, e2) + methods.align(f'-({dx})', f'-({dy})')
         return code
 
@@ -250,15 +260,16 @@ class Rbend(Element):
     """
     A rectangular bending magnet with edge focusing.
     
-    label  : str   -> Name of the element
-    slices : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
-    length : float -> Length of the element
-    angle  : float -> Bending angle in radiants
-    e1, e2 : float -> Entry and exit angle
-    k1     : float -> Strength of the quadrupolar component
-    dx, dy : float -> Horizontal and vertical alignment offset
+    label      : str   -> Name of the element
+    slices     : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+    length     : float -> Length of the element
+    angle      : float -> Bending angle in radiants
+    e1, e2     : float -> Entry and exit angle
+    k1         : float -> Strength of the quadrupolar component
+    dx, dy     : float -> Horizontal and vertical alignment offset
+    dknl, dksl : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0.):
+    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0., dknl=[], dksl=[]):
         self.label  = label
         self.slices = slices if slices else ufo.DEFAULT_BEND_SLICES
         self.length = length
@@ -268,9 +279,11 @@ class Rbend(Element):
         self.e2     = e2
         self.dx     = dx
         self.dy     = dy
-        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy']
+        self.dknl   = dknl
+        self.dksl   = dksl
+        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy', 'dknl', 'dksl']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None):
+    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dknl=None, dksl=None):
         length = length or self.length
         slices = slices or self.slices
         angle  = angle  or self.angle
@@ -279,6 +292,8 @@ class Rbend(Element):
         e2     = e2     or self.e2
         dx     = dx     or self.dx
         dy     = dy     or self.dy
+        if dknl == None: dknl = self.dknl.copy() #Explicit comparison against None
+        if dksl == None: dksl = self.dksl.copy() #to discriminate from []
  
         code = []
         f0 = 0.
@@ -309,14 +324,15 @@ class Sextupole(Element):
     """
     A thick sextupole ('Tea-pot expansion used)
  
-    label  : str   ->  Name of the element
-    slices : float ->  Number of slices used for 'tea pot' expansion
-    length : float ->  Length of the element
-    k2     : float ->  Normal sextupolar component
-    k2s    : float ->  Skew sextupolar component
-    dx, dy : float ->  Horizontal and vertical alignment offset
+    label      : str   ->  Name of the element
+    slices     : float ->  Number of slices used for 'tea pot' expansion
+    length     : float ->  Length of the element
+    k2         : float ->  Normal sextupolar component
+    k2s        : float ->  Skew sextupolar component
+    dx, dy     : float ->  Horizontal and vertical alignment offset
+    dknl, dksl : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, length=0., slices=None, k2=0., k2s=0., dx=0., dy=0.):
+    def __init__(self, label, length=0., slices=None, k2=0., k2s=0., dx=0., dy=0., dknl=[], dksl=[]):
         self.label  = label
         self.length = length
         self.slices = slices if slices else ufo.DEFAULT_SEXTUPOLE_SLICES
@@ -324,20 +340,25 @@ class Sextupole(Element):
         self.k2s    = k2s
         self.dx     = dx
         self.dy     = dy
-        self.parameters = ['length', 'k2', 'k2s', 'dx', 'dy']
+        self.dknl   = dknl
+        self.dksl   = dksl
+        self.parameters = ['length', 'k2', 'k2s', 'dx', 'dy', 'dknl', 'dksl']
 
-    def method(self, flags=0, fracture=[], length=None, slices=None, k2=None, k2s=None, dx=None, dy=None):
+    def method(self, flags=0, fracture=[], length=None, slices=None, k2=None, k2s=None, dx=None, dy=None, dknl=None, dksl=None):
         length = length or self.length
         slices = slices or self.slices
         k2     = k2     or self.k2
         k2s    = k2s    or self.k2s
         dx     = dx     or self.dx
         dy     = dy     or self.dy
+        if dknl == None: dknl = self.dknl.copy() #Explicit comparison against None
+        if dksl == None: dksl = self.dksl.copy() #to discriminate from []
 
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.teapot(flags, f'{length} * {(f - f0)}', slices, [0., 0., k2], [0., 0., k2s]))
+            #code.append(methods.teapot(flags, f'{length} * {(f - f0)}', slices, [0., 0., k2], [0., 0., k2s]))
+            code.append(methods.sextupole(flags, slices, f'{length} * {(f - f0)}', k2, k2s, dknl, dksl))
             f0 = f
 
         code[0]  = methods.align(dx, dy) + code[0]
@@ -356,14 +377,15 @@ class Octupole(Element):
     """
     A thick octupole ('Tea-pot expansion used)
  
-    label  : str   -> Name of the element
-    slices : float -> Number of slices used for 'tea pot' expansion
-    length : float -> Length of the element
-    k2     : float -> Normal octupolar component
-    k2s    : float -> Skew octupolar component
-    dx, dy : float -> Horizontal and vertical alignment offset
+    label      : str   -> Name of the element
+    slices     : float -> Number of slices used for 'tea pot' expansion
+    length     : float -> Length of the element
+    k2         : float -> Normal octupolar component
+    k2s        : float -> Skew octupolar component
+    dx, dy     : float -> Horizontal and vertical alignment offset
+    dknl, dksl : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, length=0., slices=None, k3=0., k3s=0., dx=0., dy=0.):
+    def __init__(self, label, length=0., slices=None, k3=0., k3s=0., dx=0., dy=0., dknl=[], dksl=[]):
         self.label  = label
         self.length = length
         self.slices = slices if slices else ufo.DEFAULT_OCTUPOLE_SLICES
@@ -371,20 +393,25 @@ class Octupole(Element):
         self.k3s    = k3s
         self.dx     = dx
         self.dy     = dy
-        self.parameters = ['length', 'k3', 'k3s', 'dx', 'dy']
+        self.dknl   = dknl
+        self.dksl   = dksl
+        self.parameters = ['length', 'k3', 'k3s', 'dx', 'dy', 'dknl', 'dksl']
 
-    def method(self, flags=0, fracture=[], length=None, slices=None, k3=None, k3s=None, dx=None, dy=None):
+    def method(self, flags=0, fracture=[], length=None, slices=None, k3=None, k3s=None, dx=None, dy=None, dknl=None, dksl=None):
         length = length or self.length
         slices = slices or self.slices
         k3     = k3     or self.k3
         k3s    = k3s    or self.k3s
         dx     = dx     or self.dx
         dy     = dy     or self.dy
+        if dknl == None: dknl = self.dknl.copy() #Explicit comparison against None
+        if dksl == None: dksl = self.dksl.copy() #to discriminate from []
 
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.teapot(flags, f'{length} * {(f - f0)}', slices, [0., 0., 0., k3], [0., 0., 0., k3s]))
+            #code.append(methods.teapot(flags, f'{length} * {(f - f0)}', slices, [0., 0., 0., k3], [0., 0., 0., k3s]))
+            code.append(methods.octupole(flags, slices, f'{length} * {(f - f0)}', k3, k3s, dknl, dksl))
             f0 = f
 
         code[0]  = methods.align(dx, dy) + code[0]
