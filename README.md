@@ -220,13 +220,16 @@ qf.dx = 1e-3   #displace horizontally 'qf' by 1mm
 qf.k1 *= 1.1   #increase k1 by 10%
 ```
 
-Field multipoles `knl, ksl, dknl and dksl` can be accessed both as a vector:
+Field multipoles `knl, ksl, dknl and dksl` can be accessed in two diffrent ways
+
+* as a vector:
 
 ```
 qf.dknl = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
 ```
 
-Or with a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multipole. Note that in this case the component must have been previously defined when the element was instantiated or with the vector notation
+* With a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multipole. Note that in this case the component must have been previously defined when the element was instantiated or with the vector notation.
+  As explained afterwards, this notation is useful when speciying parameters. Whereas the vector notation is not compatible with parametrization.
 
 ```
 #if 'knl' has length < 3, the next instruction will fail
@@ -234,4 +237,8 @@ qf = ufo.Quadrupole('qf', length=1, k1=2, dknl=[0, 0, 0])
 
 qf.dk2 = 0.3 #has the same effect as qf.dknl = [0., 0., 0.3]
 ```
+
+Lines
+-----
+
 
