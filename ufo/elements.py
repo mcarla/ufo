@@ -22,11 +22,25 @@ class Element():
         msg = f'{self.label: <8}: {type(self).__name__.upper(): <12} '
         return msg + '   '.join([f'{p}={self.__dict__[p]}' for p in self.parameters])
 
-    def __replace__(self, fragment, **kwargs):
-        for p in self.parameters:
-            val = kwargs[p] if p in kwargs else self.__dict__[p]
-            fragment = fragment.replace(p, '(' + str(val) + ')')
-        return fragment
+    #Multipolar field error of order N can be accessed also as self.dkN and self.dkNs,
+    #this is useful for parametrization (vectors are not implemented)
+    def __setattr__(self, name, value):
+        if name[:2] == 'dk' and name[2:].isdigit(): #Normal
+            self.dknl[int(name[2:])] = value
+            return
+        if name[:2] == 'dk' and name[-1] == 's' and name[2:-1].isdigit(): #Skew
+            self.dksl[int(name[2:-1])] = value
+            return
+
+        super.__setattr__(self, name, value)
+
+    def __getattr__(self, name):
+        if name[:2] == 'dk' and name[2:].isdigit(): #Normal
+            return self.dknl[int(name[2:])]
+        if name[:2] == 'dk' and name[-1] == 's' and name[2:-1].isdigit(): #Skew
+            return self.dksl[int(name[2:-1])]
+
+        return super.__getattr__(self, name)
 
     def method(self, **kwargs):
         return ['']
@@ -298,7 +312,7 @@ class Rbend(Element):
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
-            code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1))
+            code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1, dknl, dksl))
             f0 = f
 
         code[0]   = methods.align(dx, dy) + methods.edge(flags, length, angle, f'{e1} + ({angle}*0.5)') + code[0]
