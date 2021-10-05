@@ -173,18 +173,18 @@ UFO support several elements (drift, quarupole, dipole...). Each element is iden
 furthermore the following keyword parameters are supported by each element:
 
 
-|            | slices | length | angle |  k1   | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dknl / dksl |
-|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |   :---:   |  :---:   |  :---:   |  :---:  |    :---:    |
-| Marker     |        |        |       |       |         |           |          |          |         |             |
-| Drift      |        |   x    |       |       |         |           |          |          |         |             |
-| Mutlipole  |        |        |       |       |         |     x     |          |          |    x    |             |
-| Quadrupole |    x   |   x    |       |   x   |         |           |          |          |    x    |      x      |
-| Sbend      |    x   |   x    |   x   |   x   |    x    |           |          |          |    x    |      x      |
-| Rbend      |    x   |   x    |   x   |   x   |    x    |           |          |          |    x    |      x      |
-| Sextupole  |    x   |   x    |       |       |         |           |    x     |          |    x    |      x      |
-| Octupole   |    x   |   x    |       |       |         |           |          |    x     |    x    |      x      |
+|            | slices | length | angle |  k1   | e1 / e2 | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dkn / dks |
+|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |   :---:   |  :---:   |  :---:   |  :---:  |   :---:    |
+| Marker     |        |        |       |       |         |           |          |          |         |            |
+| Drift      |        |   x    |       |       |         |           |          |          |         |            |
+| Mutlipole  |        |        |       |       |         |     x     |          |          |    x    |            |
+| Quadrupole |    x   |   x    |       |   x   |         |           |          |          |    x    |     x      |
+| Sbend      |    x   |   x    |   x   |   x   |    x    |           |          |          |    x    |     x      |
+| Rbend      |    x   |   x    |   x   |   x   |    x    |           |          |          |    x    |     x      |
+| Sextupole  |    x   |   x    |       |       |         |           |    x     |          |    x    |     x      |
+| Octupole   |    x   |   x    |       |       |         |           |          |    x     |    x    |     x      |
 
-For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
+For Quadrupole, Sbend and Rbend the `slices`, `dkn` and `dks` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
 
 
 **slices:**      Number of slices used in Teapot expansion         
@@ -205,7 +205,7 @@ For Quadrupole, Sbend and Rbend the `slices`, `dknl` and `dksl` parameters have 
 
 **dx / dy:**     Horizontal and vertical alignement errors [m]        
 
-**dknl / dksl:** Integrated normal and skew multipolar field errors [m^-n] 
+**dkn / dks:** Integrated normal and skew multipolar field errors [m^-n] 
 
 For example a new quadrupole with length 1 m and strength 2 m^-1 can be instantiated with:
 
@@ -220,12 +220,12 @@ qf.dx = 1e-3   #displace horizontally 'qf' by 1mm
 qf.k1 *= 1.1   #increase k1 by 10%
 ```
 
-Field multipoles `knl, ksl, dknl and dksl` can be accessed in two diffrent ways
+Field multipoles `knl, ksl, dkn and dks` can be accessed in two diffrent ways
 
 * as a vector:
 
 ```
-qf.dknl = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
+qf.dkn = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
 ```
 
 * With a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multipole. Note that in this case the component must have been previously defined when the element was instantiated or with the vector notation.
@@ -233,9 +233,9 @@ qf.dknl = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
 
 ```
 #if 'knl' has length < 3, the next instruction will fail
-qf = ufo.Quadrupole('qf', length=1, k1=2, dknl=[0, 0, 0])
+qf = ufo.Quadrupole('qf', length=1, k1=2, dkn=[0, 0, 0])
 
-qf.dk2 = 0.3 #has the same effect as qf.dknl = [0., 0., 0.3]
+qf.dk2 = 0.3 #has the same effect as qf.dkn = [0., 0., 0.3]
 ```
 
 Lines

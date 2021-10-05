@@ -96,12 +96,12 @@ def teapot(flags, length, slices, knl, ksl, angle=0): #Using Teapot slicing
 
     return fragment
 
-def quadrupole(flags, slices, length, k1, dknl, dksl):
+def quadrupole(flags, slices, length, k1, dkn, dks):
     if flags & KICK:
-        knl = copy_multipoles_and_pad(dknl, 2)
+        knl = copy_multipoles_and_pad(dkn, 2)
         knl[1] = f'({knl[1]} + {k1})'
 
-        fragment = teapot(flags, length, slices, knl, dksl)
+        fragment = teapot(flags, length, slices, knl, dks)
 
     else:
         fragment = ('{\n'
@@ -133,11 +133,11 @@ def quadrupole(flags, slices, length, k1, dknl, dksl):
 
     return fragment
 
-def sbend(flags, slices, length, angle, k1, dknl, dksl):
+def sbend(flags, slices, length, angle, k1, dkn, dks):
     if flags & KICK:
-        knl = copy_multipoles_and_pad(dknl, 2)
+        knl = copy_multipoles_and_pad(dkn, 2)
         knl[1] = f'({knl[1]} + {k1})'
-        fragment = teapot(flags, length, slices, knl, dksl, angle)
+        fragment = teapot(flags, length, slices, knl, dks, angle)
     else:
         fragment = ('{\n'
                     '    ufloat x0  = x;\n'
@@ -205,21 +205,21 @@ def edge(flags, length, angle, e):
 
     return fragment
 
-def sextupole(flags, slices, length, k2, k2s, dknl, dksl):
-    knl = copy_multipoles_and_pad(dknl, 3)
-    ksl = copy_multipoles_and_pad(dksl, 3)
+def sextupole(flags, slices, length, k2, k2s, dkn, dks):
+    knl = copy_multipoles_and_pad(dkn, 3)
+    ksl = copy_multipoles_and_pad(dks, 3)
     knl[2] = f'({knl[2]} + {k2})'
     ksl[2] = f'({ksl[2]} + {k2s})'
 
-    return teapot(flags, length, slices, knl, dksl)
+    return teapot(flags, length, slices, knl, dks)
 
-def octupole(flags, slices, length, k3, k3s, dknl, dksl):
-    knl = copy_multipoles_and_pad(dknl, 4)
-    ksl = copy_multipoles_and_pad(dksl, 4)
+def octupole(flags, slices, length, k3, k3s, dkn, dks):
+    knl = copy_multipoles_and_pad(dkn, 4)
+    ksl = copy_multipoles_and_pad(dks, 4)
     knl[3] = f'({knl[3]} + {k3})'
     ksl[3] = f'({ksl[3]} + {k3s})'
 
-    return teapot(flags, length, slices, knl, dksl)
+    return teapot(flags, length, slices, knl, dks)
 
 #def cavity(flags, field, frequency, lag):
 #    #field is normalized by pc (reference beam energy)
