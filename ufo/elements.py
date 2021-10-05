@@ -11,6 +11,13 @@ from . import mad
 
 import ufo
 
+def __dk_from_kwargs__(kwargs, dkn, dks):
+    for prm, value in kwargs.items():
+        if prm[:2] == 'dk' and prm[2:].isdigit(): #Normal
+            dkn[int(prm[2:])] = value
+        if prm[:2] == 'dk' and prm[-1] == 's' and prm[2:-1].isdigit(): #Skew
+            dks[int(prm[2:-1])] = value
+
 class Element():
     def __init__(self):
         pass
@@ -186,7 +193,7 @@ class Quadrupole(Element):
         self.dks    = dks
         self.parameters = ['length', 'k1', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, k1=None, dx=None, dy=None, dkn=None, dks=None):
+    def method(self, flags=0, fracture=[], slices=None, length=None, k1=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         slices = slices or self.slices
         length = length or self.length
         k1     = k1     or self.k1
@@ -194,7 +201,9 @@ class Quadrupole(Element):
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
         if dks == None: dks = self.dks.copy() #to discriminate from []
- 
+
+        __dk_from_kwargs__(kwargs, dkn, dks)
+
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
@@ -240,7 +249,7 @@ class Sbend(Element):
         self.dks    = dks
         self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dkn=None, dks=None):
+    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         length = length or self.length
         slices = slices or self.slices
         angle  = angle  or self.angle
@@ -251,7 +260,9 @@ class Sbend(Element):
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
         if dks == None: dks = self.dks.copy() #to discriminate from []
- 
+
+        __dk_from_kwargs__(kwargs, dkn, dks)
+
         code = []
         f0 = 0.
         for f in (fracture + [1.]): #Add last point to get the entire pass
@@ -297,7 +308,7 @@ class Rbend(Element):
         self.dks    = dks
         self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dkn=None, dks=None):
+    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         length = length or self.length
         slices = slices or self.slices
         angle  = angle  or self.angle
@@ -308,6 +319,8 @@ class Rbend(Element):
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
         if dks == None: dks = self.dks.copy() #to discriminate from []
+
+        __dk_from_kwargs__(kwargs, dkn, dks)
  
         code = []
         f0 = 0.
@@ -358,7 +371,7 @@ class Sextupole(Element):
         self.dks    = dks
         self.parameters = ['length', 'k2', 'k2s', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], length=None, slices=None, k2=None, k2s=None, dx=None, dy=None, dkn=None, dks=None):
+    def method(self, flags=0, fracture=[], length=None, slices=None, k2=None, k2s=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         length = length or self.length
         slices = slices or self.slices
         k2     = k2     or self.k2
@@ -367,6 +380,8 @@ class Sextupole(Element):
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
         if dks == None: dks = self.dks.copy() #to discriminate from []
+
+        __dk_from_kwargs__(kwargs, dkn, dks)
 
         code = []
         f0 = 0.
@@ -411,7 +426,7 @@ class Octupole(Element):
         self.dks    = dks
         self.parameters = ['length', 'k3', 'k3s', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], length=None, slices=None, k3=None, k3s=None, dx=None, dy=None, dkn=None, dks=None):
+    def method(self, flags=0, fracture=[], length=None, slices=None, k3=None, k3s=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         length = length or self.length
         slices = slices or self.slices
         k3     = k3     or self.k3
@@ -420,6 +435,8 @@ class Octupole(Element):
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
         if dks == None: dks = self.dks.copy() #to discriminate from []
+
+        __dk_from_kwargs__(kwargs, dkn, dks)
 
         code = []
         f0 = 0.
