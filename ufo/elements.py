@@ -231,11 +231,13 @@ class Sbend(Element):
     length   : float -> Length of the element
     angle    : float -> Bending angle in radiants
     e1, e2   : float -> Entry and exit angle
+    hgap     : float -> Half gap of the magnet
+    fint     : float -> Entrance and exit fringe field integral
     k1       : float -> Strength of the quadrupolar component
     dx, dy   : float -> Horizontal and vertical alignment offset
     dkn, dks : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0., dkn=[], dks=[]):
+    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., hgap=0., fint=0., dx=0., dy=0., dkn=[], dks=[]):
         self.label  = label
         self.slices = slices if slices else ufo.DEFAULT_BEND_SLICES
         self.length = length
@@ -243,19 +245,23 @@ class Sbend(Element):
         self.k1     = k1
         self.e1     = e1
         self.e2     = e2
+        self.hgap   = hgap
+        self.fint   = fint
         self.dx     = dx
         self.dy     = dy
         self.dkn    = dkn
         self.dks    = dks
-        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy', 'dkn', 'dks']
+        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'hgap', 'fint', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
+    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, hgap=None, fint=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         length = length or self.length
         slices = slices or self.slices
         angle  = angle  or self.angle
         k1     = k1     or self.k1
         e1     = e1     or self.e1
         e2     = e2     or self.e2
+        hgap   = hgap   or self.hgap
+        fint   = fint   or self.fint
         dx     = dx     or self.dx
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
@@ -269,8 +275,9 @@ class Sbend(Element):
             code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1, dkn, dks))
             f0 = f
 
-        code[ 0]  = methods.align(dx, dy) + methods.edge(flags, length, angle, e1) + code[0]
-        code[-1] += methods.edge(flags, length, angle, e2) + methods.align(f'-({dx})', f'-({dy})')
+        fringe = f'({hgap} * {fint})'
+        code[ 0]  = methods.align(dx, dy) + methods.edge(flags, length, angle, e1, fringe) + code[0]
+        code[-1] += methods.edge(flags, length, angle, e2, fringe) + methods.align(f'-({dx})', f'-({dy})')
         return code
 
     def dump(self, style):
@@ -290,11 +297,13 @@ class Rbend(Element):
     length   : float -> Length of the element
     angle    : float -> Bending angle in radiants
     e1, e2   : float -> Entry and exit angle
+    hgap     : float -> Half gap of the magnet
+    fint     : float -> Entrance and exit fringe field integral
     k1       : float -> Strength of the quadrupolar component
     dx, dy   : float -> Horizontal and vertical alignment offset
     dkn, dks : list  -> List of normal and skew multipolar field errors
     """
-    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., dx=0., dy=0., dkn=[], dks=[]):
+    def __init__(self, label, slices=None, length=0., angle=0., k1=0., e1=0., e2=0., hgap=0, fint=0, dx=0., dy=0., dkn=[], dks=[]):
         self.label  = label
         self.slices = slices if slices else ufo.DEFAULT_BEND_SLICES
         self.length = length
@@ -302,19 +311,23 @@ class Rbend(Element):
         self.k1     = k1
         self.e1     = e1
         self.e2     = e2
+        self.hgap   = hgap
+        self.fint   = fint
         self.dx     = dx
         self.dy     = dy
         self.dkn    = dkn
         self.dks    = dks
-        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'dx', 'dy', 'dkn', 'dks']
+        self.parameters = ['length', 'angle', 'k1', 'e1', 'e2', 'hgap', 'fint', 'dx', 'dy', 'dkn', 'dks']
 
-    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
+    def method(self, flags=0, fracture=[], slices=None, length=None, angle=None, k1=None, e1=None, e2=None, hgap=None, fint=None, dx=None, dy=None, dkn=None, dks=None, **kwargs):
         length = length or self.length
         slices = slices or self.slices
         angle  = angle  or self.angle
         k1     = k1     or self.k1
         e1     = e1     or self.e1
         e2     = e2     or self.e2
+        hgap   = hgap   or self.hgap
+        fint   = fint   or self.fint
         dx     = dx     or self.dx
         dy     = dy     or self.dy
         if dkn == None: dkn = self.dkn.copy() #Explicit comparison against None
@@ -328,8 +341,9 @@ class Rbend(Element):
             code.append(methods.sbend(flags, slices, f'{length} * {(f - f0)}', f'{angle} * {(f - f0)}', k1, dkn, dks))
             f0 = f
 
-        code[0]   = methods.align(dx, dy) + methods.edge(flags, length, angle, f'{e1} + ({angle}*0.5)') + code[0]
-        code[-1] += methods.edge(flags, length, angle, f'{e2} + ({angle}*0.5)') + methods.align(f'-({dx})', f'-({dy})')
+        fringe = f'({hgap} * {fint})'
+        code[0]   = methods.align(dx, dy) + methods.edge(flags, length, angle, f'{e1} + ({angle}*0.5)', fringe) + code[0]
+        code[-1] += methods.edge(flags, length, angle, f'{e2} + ({angle}*0.5)', fringe) + methods.align(f'-({dx})', f'-({dy})')
 
         return code
 

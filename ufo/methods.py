@@ -195,12 +195,17 @@ def sbend(flags, slices, length, angle, k1, dkn, dks):
 
     return fragment
 
-def edge(flags, length, angle, e):
+#For fringe field see SLAC-75
+def edge(flags, length, angle, e, fringe):
     fragment = ('{\n'
-               f'    ufloat curvature = {angle} / ({length}) {"" if flags & ACHROMATIC else "* oodppo"};\n'
+               f'    ufloat curvature, psi;\n'
+
+               f'    curvature = {angle} / ({length}) {"" if flags & ACHROMATIC else "* oodppo"};\n'
+               f'    psi = {e} - 2 * curvature * {fringe} / cos({e}) * (1. + sin({e}) * sin({e}));\n'
 
                f'    px += x * curvature * tan({e});\n'
-               f'    py -= y * curvature * tan({e});\n'
+               #f'    double psi = {e} - 2 * curvature * {fringe};\n' #First order
+               f'    py -= y * curvature * tan(psi);\n'
                 '}\n')
 
     return fragment
