@@ -197,9 +197,7 @@ For Quadrupole, Sbend and Rbend the `slices`, `dkn` and `dks` parameters have ef
  
 **e1 / e2:**     Entry / exit pole angle [rad]
 
-**hgap:**        Magnet half gap [m] and fringe field integral
-
-**fint:**        Fringe field integral
+**hgap / fint:** Magnet half gap [m] and fringe field integral
 
 **knl / ksl:**   Integrated normal and skew field multipolar components [m^-n]
 
