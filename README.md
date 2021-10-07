@@ -335,7 +335,15 @@ RING:   LINE=(PERIOD, PERIOD, PERIOD, PERIOD);
 
 Beam(energy=3e9, particle_mass=electron_mass, bunch_charge=1e-9, beam_current=0.25, ex=1e-9, ey=1e-9, bunch_length=6e-3, energy_spread=1e-3)
 ----------------------
+A Beam object collect all the informations relative to particles
 
+* **energy:**        particles energy [eV]
+* **particle_mass:** particle mass [eV]
+* **bunch_charge:**  charge of the entire bunch [C]
+* **beam_current:**  average beam current [A]
+* **ex / ey:**       horizontal and vertical emittances [m]
+* **bunch_length:**  longitudinal dimension of the bunch [m]
+* **energy_spread:** RMS energy spread of the bunch divided by the average bunch energy
 
 dump(lattice, path, style='mad', beam=Beam())
 ---------------------------------------------
@@ -346,3 +354,11 @@ A lattice can be exported in a text file compatible with one of the following pr
 * **path**    the name of the output file to be generated
 * **style**   A string representing the syntax to be used. It can be' mad', 'elegant', 'at' or 'opa'
 * **beam**    Beam informations are used only in when exporting to 'at' or 'opa'
+
+Examples:
+```
+import ufo
+
+lattice = ufo.Lattice('ring.mad')
+ufo.dump(lattice, 'ring.ele', style='elegant')
+```
