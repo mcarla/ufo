@@ -265,11 +265,6 @@ The Line class constructor is defined as:
 
 * **line:**    A list of elements or other lines to be included
 
-A new line can be created with:
-```
-l = ufo.Line('myline', [qf, qd])
-```
-
 The Line class is provided with some special function and attribute to easy certain common tedious tasks:
 
 Attributes:
@@ -285,7 +280,23 @@ Methods:
 * **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
 
 * **find(what):**       return a list of elements indices such that `what(element) == True`
-  * ***what:*** filter function should take as argument an element object and return a boolean
+  * ***what:*** filter function should take as argument an element object and return a boolean (lambda functions here are pretty handy)
 
 * **locate(element):**  return the position in meters of a given element index
   * ***element:*** element object
+
+Examples:
+```
+bend = ufo.Sbend('B', length=1., angle=0.1)
+qf = ufo.Quadrupole('QF', length=0.3, k1=1.)
+qd = ufo.Quadrupole('QD', length=0.3, k1=-1.)
+
+period = ufo.Line('fodo', [qf, bend, qd, bend])
+ring = ufo.Line('ring', [period, period, period, period])
+
+ring.angle
+ > 0.8
+ 
+ring.find(lambda e: type(e)==ufo.Quadrupole)
+ > [0, 2, 4, 6, 8, 10, 12, 14]
+```
