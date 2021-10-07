@@ -393,7 +393,7 @@ Track allows to track a bunch of particles through a line. Tracking parameters i
 
 * **context:** an OpenCL context as returned by `ufo.context()`
 
-* **options:** OpenCL back-end options, see section **options** for detailed informations
+* **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
 Attributes:
 
@@ -451,5 +451,12 @@ Many simulations parameters are controlled by a set of boolean flags:
 
 * **ACHROMATIC:**       suppress the chromatic focusing effects. Useful for dispersion computation
 
-Options
--------
+OpenCL options
+--------------
+By default the following OpenCL options are passed to the OpenCL back-end:
+
+* -cl-fast-relaxed-math
+* -cl-mad-enable
+* -cl-single-precision-constant
+
+The latter is removed when switching to 64 bit variables (when the flag **DOUBLE_PRECISION:** is set). The default options can be changed by setting the string: `ufo.DEFAULT_CL_OPTIONS`
