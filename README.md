@@ -335,7 +335,7 @@ RING:   LINE=(PERIOD, PERIOD, PERIOD, PERIOD);
 
 Beam(energy=3e9, particle_mass=electron_mass, bunch_charge=1e-9, beam_current=0.25, ex=1e-9, ey=1e-9, bunch_length=6e-3, energy_spread=1e-3)
 ----------------------
-A Beam object collect all the informations relative to particles
+A Beam object collects all the informations relative to particles
 
 * **energy:**        particles energy [eV]
 
