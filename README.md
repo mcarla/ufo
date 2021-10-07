@@ -254,17 +254,16 @@ qf = ufo.Quadrupole('qf', length=1, k1=2, dkn=[0, 0, 0])
 qf.dk2 = 0.3 #has the same effect as qf.dkn = [0., 0., 0.3]
 ```
 
-Lines
------
+Line(label, line=[])
+--------------------
 
 A line is a list of elements or other lines and is used to describe the ordering of a magnetic lattice.
 The Line class is derived from the python list class, therefore all the standard lists functionallities are available (`append, remove, copy...`)
 The Line class constructor is defined as:
-### Line(label, line=[])
 
-**label:**   An unique string identifying the line
+* label:   An unique string identifying the line
 
-**line:**    A list of elements or other lines to be included
+* line:    A list of elements or other lines to be included
 
 A new line can be created with:
 ```
@@ -273,11 +272,16 @@ l = ufo.Line('myline', [qf, qd])
 
 The Line class is provided with some special function and attribute to easy certain common tedious tasks:
 
-**count:**  return the number of elements in the line (including the ones in included lines)
+Attributes:
 
-**length:**    the overall line length
-**angle:**     the overall line bending angle
-**flatten():** return a flattened version of the line (all sub-lines will be recursively expanded)
-**find():**    find the element index given a filter function provided by the user
-**locate():**  return the position in meters of a given element index
+* **count:**  Teturn the number of elements in the line (including the ones in included lines)
+* **length:** The overall line length
+* **angle:**  The overall line bending angle
 
+Methods:
+
+* **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
+* **find(what):**       return a list of elements indices such that `what(element) == True`
+  * ***what:*** filter function should take as argument an element object and return a boolean
+* **locate(element):**  return the position in meters of a given element index
+  * ***element:*** element object
