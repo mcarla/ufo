@@ -362,3 +362,29 @@ import ufo
 lattice = ufo.Lattice('ring.mad')
 ufo.dump(lattice, 'ring.ele', style='elegant')
 ```
+
+Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)
+-------------------
+
+Track allows to track a bunch of particles through a line. Tracking parameters includes intial particle conditions and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified of a per-particle basis, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
+
+* **line:**  the Line object to be used for tracking
+* **flags:** flags to control specific tracking options, see section **flags** for detailed informations
+* **turns:** the number of turns to tracked
+* **particles:** the number of particles to be tracked
+* **parameters:** a list of parameters to be allowed for variation, see section **parameters** for detailed informations
+* **where:** a list of positions where the particles coordinate will be recorded at each turn. Positions are specified as a floating variable, where the integer part identifies the element index while the fractional part is the position along the element expressed as a fraction of the entire element length. The special position -1 identify the end of the line
+* **dp:** relative energy deviation used when the **FIVED** flag is set (5D simulation)
+* **context:** an OpenCL context as returned by `ufo.context()`
+* **options:** OpenCL back-end options, see section **options** for detailed informations
+
+Attributes:
+
+* **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
+* **tracks** the output buffer where the tracking results will be stored
+* **src:** source code of the OpenCL kernel, useful for debugging
+
+Methods:
+
+* **run(threads=1):** run the actual simulation. The simulation can be run as many times as necessary and the parameters changed between each run
+* 
