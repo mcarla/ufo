@@ -334,7 +334,7 @@ lattice.RING.length
  > 10.4
 ```
 
-where 'ring.mad' is:
+where the input file 'ring.mad' is:
 ```
 QF: QUADRUPOLE, L=0.3, K1= 1;
 QD: QUADRUPOLE, L=0.3, K1=-1;
