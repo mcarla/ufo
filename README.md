@@ -286,6 +286,8 @@ Methods:
 
 Examples:
 ```
+import ufo
+
 bend = ufo.Sbend('B', length=1., angle=0.1)
 qf = ufo.Quadrupole('QF', length=0.3, k1=1.)
 qd = ufo.Quadrupole('QD', length=0.3, k1=-1.)
@@ -298,4 +300,7 @@ ring.angle
  
 ring.find(lambda e: type(e)==ufo.Quadrupole)
  > [0, 2, 4, 6, 8, 10, 12, 14]
+
+ring.find(lambda e: e.label=='QD')
+ > [2, 6, 10, 14]
 ```
