@@ -4,8 +4,8 @@ import color
 
 def test():
     #MAD-X Twiss command results:
-    dqx = 1.752728636
-    dqy = 3.589260652 
+    dqx = 1.752728632
+    dqy = 3.763977279 
 
     optics = ufo.Lattice(path='../optics/alba.mad')
 

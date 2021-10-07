@@ -15,11 +15,11 @@ def test():
 
     tr.run(threads=1)
 
-    delta = np.max(np.absolute(tr.track[0][:, 0] - x))
+    delta = np.max(np.absolute(tr.tracks[0][:, 0] - x))
     c = color.OK if abs(delta) < 1e-6 else color.FAIL
     print(f"Particle 1: UFO/MAD-X Max |Delta| [m]: {c} {delta:+1.8e} {color.END}")
 
-    delta = np.max(np.absolute(tr.track[1][:, 0] - x))
+    delta = np.max(np.absolute(tr.tracks[1][:, 0] - x))
     c = color.OK if abs(delta) < 1e-6 else color.FAIL
     print(f"Particle 2: UFO/MAD-X Max |Delta| [m]: {c} {delta:+1.8e} {color.END}")
 

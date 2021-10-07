@@ -1,0 +1,8 @@
+CALL, FILE="../optics/alba.mad";
+
+BEAM, SEQUENCE=RING;
+USE, PERIOD=RING;
+
+select,flag=twiss, sequence=RING, column=name, betx, alfx, bety, alfy, dx, dpx, mux, muy;
+TWISS, CHROM=True, SAVE, FILE="optics.twi";
+
