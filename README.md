@@ -443,7 +443,12 @@ Many simulations parameters are controlled by a set of boolean flags:
 
 * **EXACT:**            use exact Hamiltonian
 
-* **KICK:**             replace thick elements (Sbend, Rbend and Quadrupole with thin elements and drifts using the teapot expansion)
+* **KICK:**             replace thick elements (Sbend, Rbend and Quadrupole) with thin kicks and drifts using the teapot expansion. The default number of slices used for the expansion is defined by the variables:
+  * **DEFAULT_QUADRUPOLE_SLICES**
+  * **DEFAULT_BEND_SLICES**
+  * **DEFAULT_MULTIPOLE_SLICES**
+  * **DEFAULT_SEXTUPOLE_SLICES**
+  * **DEFAULT_OCTUPOLE_SLICES**
 
 * **RADIATION:**        not yet implemented
 
