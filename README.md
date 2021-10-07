@@ -1,7 +1,11 @@
 
-                            U.F.O.
-
 ```
+                          _   _ _____ ___
+                        / / / / ____/ __ \
+                       / / / / /_  / / / /
+                      / /_/ / __/ / /_/ / 
+                      \____/_/    \____/ 
+
  
                           \__/  ^__^
                           (oo)  (oo)
@@ -23,8 +27,10 @@
 
 ```
 
-***UFO*** is a fast accelerator optics toolkit designed with GPU in mind, nevertheless it can be used on CPUs with good results.
-UFO is not meant to be a general purpose tool, instead it aims to performance at expenses of flexibility and ease of use.
+***UFO*** is a fast accelerator optics toolkit designed with GPU in mind,
+nevertheless it can be used on CPUs with good results.
+UFO is not meant to be a general purpose tool,
+instead it aims to performance at expenses of flexibility and ease of use.
 
 Requirements
 ------------
