@@ -261,9 +261,9 @@ A line is a list of elements or other lines and is used to describe the ordering
 The Line class is derived from the python list class, therefore all the standard lists functionallities are available (`append, remove, copy...`)
 The Line class constructor is defined as:
 
-* label:   An unique string identifying the line
+* **label:**   An unique string identifying the line
 
-* line:    A list of elements or other lines to be included
+* **line:**    A list of elements or other lines to be included
 
 A new line can be created with:
 ```
@@ -275,13 +275,17 @@ The Line class is provided with some special function and attribute to easy cert
 Attributes:
 
 * **count:**  Teturn the number of elements in the line (including the ones in included lines)
+
 * **length:** The overall line length
+
 * **angle:**  The overall line bending angle
 
 Methods:
 
 * **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
+
 * **find(what):**       return a list of elements indices such that `what(element) == True`
   * ***what:*** filter function should take as argument an element object and return a boolean
+
 * **locate(element):**  return the position in meters of a given element index
   * ***element:*** element object
