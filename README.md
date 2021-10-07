@@ -413,6 +413,7 @@ Parameters
 Parameters are used to identify which variables will be specified independently for each particle and or need to be changed between one simulation run and another.
 There is no distinction between beam (intial particle coordinates...) and lattice (field strength...) .
 Particle coordinates parameters are identified by the strings: **'x', 'px', 'y', 'py', 'z', 'dp'**. While lattice parameters are identified by tuples of two elements, the first one identify an element or a family of elements and the second one the actual name of the parameter.
+When not specified the beam parameters x, px... will be set to 0, while the lattice parameters will be set to the value defined in the lattice at the time the simulation is instantiated. Once a simulation has been instantiated, changing any value of an element will not have any effect on the simulations, only parameters defined throught the parameters argument can be changed (through the parameters attribute). 
 
 Examples:
 
