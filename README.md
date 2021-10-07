@@ -416,14 +416,19 @@ Particle coordinates parameters are identified by the strings: **'x', 'px', 'y',
 
 Examples:
 
-#'k1' of the first element of a line is parameter:
+'k1' of the first element of a line is a parameter:
 ```
 parameters = [(0, 'k1')]
 ```
 
-'k1' of the element QF is a parameter. If QF appears multiple times (family), every appearence will behave the same way:
+'k1' of the element QF is a parameter. If QF appears multiple times (family), every appearence will be affected the same:
 ```
 parameters = [('QF', 'length')]
+```
+
+Multiples parameters can be specified for one simulation. In this case we want to define for each particle the initial coordinates x and y, the length of the family QF and the field component k2 of the third element:
+```
+parameters = ['x', 'y', ('QF', 'length'), (2, 'k2')]
 ```
 
 Flags
