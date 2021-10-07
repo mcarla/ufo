@@ -386,5 +386,5 @@ Attributes:
 
 Methods:
 
-* **run(threads=1):** run the actual simulation. The simulation can be run as many times as necessary and the parameters changed between each run
-* 
+* **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
+  * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
