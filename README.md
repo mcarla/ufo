@@ -416,9 +416,14 @@ Particle coordinates parameters are identified by the strings: **'x', 'px', 'y',
 
 Examples:
 
+#'k1' of the first element of a line is parameter:
 ```
-parameters = [(0, 'k1')]          #'k1' of the first element of a line is parameter
-parameters = [('QF', 'length')]   #'k1' of the element QF is a parameter. If QF appears multiple times (family), every appearence will behave the same way
+parameters = [(0, 'k1')]
+```
+
+'k1' of the element QF is a parameter. If QF appears multiple times (family), every appearence will behave the same way:
+```
+parameters = [('QF', 'length')]
 ```
 
 Flags
