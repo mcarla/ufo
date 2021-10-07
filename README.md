@@ -372,7 +372,7 @@ A lattice can be exported in a text file compatible with one of the following pr
 
 * **path:**    the name of the output file to be generated
 
-* **style:**   A string representing the syntax to be used. It can be' mad', 'elegant', 'at' or 'opa'
+* **style:**   A string representing the syntax to be used. It can be 'mad', 'elegant', 'at' or 'opa'
 
 * **beam:**    Beam informations are used only in when exporting to 'at' or 'opa'
 
