@@ -27,9 +27,9 @@ class Lattice():
 
 class Line(list):
     """A class derivated from the list class, containing a list of elements or other lines"""
-    def __init__(self, label):
+    def __init__(self, label, line=[]):
         self.label = label #Same label convention as elements
-        super().__init__()
+        super().__init__(line)
 
     def __str__(self):
         return self.label 
@@ -118,7 +118,7 @@ class Line(list):
 
         return code
 
-    def flatten(self):
+    def flatten(self, reverse=False):
         """Return a flattened version of the line (all lines are expanded into its composing elements)"""
         flat = [e.flatten() if getattr(e, 'flatten', None) else [e] for e in self]
         return sum(flat, []) #Flatten list of lists
