@@ -408,6 +408,19 @@ Methods:
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
 
+Parameters
+----------
+Parameters are used to identify which variables will be specified independently for each particle and or need to be changed between one simulation run and another.
+There is no distinction between beam (intial particle coordinates...) and lattice (field strength...) .
+Particle coordinates parameters are identified by the strings: **'x', 'px', 'y', 'py', 'z', 'dp'**. While lattice parameters are identified by tuples of two elements, the first one identify an element or a family of elements and the second one the actual name of the parameter.
+
+Examples:
+
+```
+parameters = [(0, 'k1')]          #'k1' of the first element of a line is parameter
+parameters = [('QF', 'length')]   #'k1' of the element QF is a parameter. If QF appears multiple times (family), every appearence will behave the same way
+```
+
 Flags
 -----
 
@@ -426,3 +439,6 @@ Many simulations parameters are controlled by a set of boolean flags:
 * **DOUBLE_PRECISION:** use 64 bit variables instead of 32 bit. Double precision allows for higher precision at the expense of performance (expecially on GPU)
 
 * **ACHROMATIC:**       suppress the chromatic focusing effects. Useful for dispersion computation
+
+Options
+-------
