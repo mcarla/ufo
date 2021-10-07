@@ -459,4 +459,4 @@ By default the following OpenCL options are passed to the OpenCL back-end:
 * -cl-mad-enable
 * -cl-single-precision-constant
 
-The latter is removed when switching to 64 bit variables (when the flag **DOUBLE_PRECISION:** is set). The default options can be changed by setting the string: `ufo.DEFAULT_CL_OPTIONS`
+The latter is removed when switching to 64 bit variables (when the flag **DOUBLE_PRECISION** is set). The default options can be changed by setting the string: `ufo.DEFAULT_CL_OPTIONS`
