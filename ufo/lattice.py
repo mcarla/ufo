@@ -118,7 +118,7 @@ class Line(list):
 
         return code
 
-    def flatten(self, reverse=False):
+    def flatten(self):
         """Return a flattened version of the line (all lines are expanded into its composing elements)"""
         flat = [e.flatten() if getattr(e, 'flatten', None) else [e] for e in self]
         return sum(flat, []) #Flatten list of lists
