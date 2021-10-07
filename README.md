@@ -304,3 +304,31 @@ ring.find(lambda e: type(e)==ufo.Quadrupole)
 ring.find(lambda e: e.label=='QD')
  > [2, 6, 10, 14]
 ```
+
+Lattice(path=None)
+------------------
+
+A lattice is a collection of elements and lines, it can be assembled manually or more conveniently from a file.
+The input file syntax is compatible with the MAD-X syntax, even if not all the MAD-X features are supported.
+
+* **path:** input file path, if not specified an empty lattice is generated
+
+Examples:
+```
+import ufo
+
+lattice = ufo.Lattice('ring.mad')
+lattice.RING.length
+ > 10.4
+```
+
+where 'ring.mad' is:
+```
+QF: QUADRUPOLE, L=0.3, K1= 1;
+QD: QUADRUPOLE, L=0.3, K1=-1;
+
+B: SBEND, L=1, ANGLE=0.1;
+
+PERIOD: LINE=(QF, B, QD, B);
+RING:   LINE=(PERIOD, PERIOD, PERIOD, PERIOD);
+```
