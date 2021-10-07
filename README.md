@@ -350,10 +350,10 @@ dump(lattice, path, style='mad', beam=Beam())
 
 A lattice can be exported in a text file compatible with one of the following programs MAD-X, Elegant, Accelerator-Toolbox or OPA
 
-* **lattice** the Lattice to be exported
-* **path**    the name of the output file to be generated
-* **style**   A string representing the syntax to be used. It can be' mad', 'elegant', 'at' or 'opa'
-* **beam**    Beam informations are used only in when exporting to 'at' or 'opa'
+* **lattice:** the Lattice to be exported
+* **path:**    the name of the output file to be generated
+* **style:**   A string representing the syntax to be used. It can be' mad', 'elegant', 'at' or 'opa'
+* **beam:**    Beam informations are used only in when exporting to 'at' or 'opa'
 
 Examples:
 ```
