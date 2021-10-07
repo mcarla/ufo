@@ -258,7 +258,7 @@ Line(label, line=[])
 --------------------
 
 A line is a list of elements or other lines and is used to describe the ordering of a magnetic lattice.
-The Line class is derived from the python list class, therefore all the standard lists functionallities are available (`append, remove, copy...`)
+The Line class is derived from the python list class, therefore all the standard lists functionalities are available (`append, remove, copy...`)
 The Line class constructor is defined as:
 
 * **label:**   An unique string identifying the line
