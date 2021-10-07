@@ -61,7 +61,21 @@ The output should resemble:
 ```
 
 In this example two back-ends are available: 0 is an Nvidia Quadro GPU, while 1 is an Intel i5 CPU.
+UFO can be called from a script or used interactively for example with ipython3. In the latter case some online documentation is accessible via the '?' operator, for example:
 
+```
+In [5]: ufo.Quadrupole?
+Init signature: ufo.Quadrupole(label, slices=None, length=0.0, k1=0.0, dx=0.0, dy=0.0, dkn=[], dks=[])
+Docstring:     
+A thick normal quadrupole element.
+
+label    : str   -> Name of the element
+slices   : float -> Number of slices used for 'tea pot' expansion (if KICK flag is set)
+length   : float -> Length of the element
+k1       : float -> Strength of the quadrupolar component
+dx, dy   : float -> Horizontal and vertical alignment offset
+dkn, dks : list  -> List of normal and skew multipolar field errors
+```
 
 How does it work?
 -----------------
@@ -243,4 +257,27 @@ qf.dk2 = 0.3 #has the same effect as qf.dkn = [0., 0., 0.3]
 Lines
 -----
 
+A line is a list of elements or other lines and is used to describe the ordering of a magnetic lattice.
+The Line class is derived from the python list class, therefore all the standard lists functionallities are available (`append, remove, copy...`)
+The Line class constructor is defined as:
+### Line(label, line=[])
+
+**label:**   An unique string identifying the line
+
+**line:**    A list of elements or other lines to be included
+
+A new line can be created with:
+```
+l = ufo.Line('myline', [qf, qd])
+```
+
+The Line class is provided with some special function and attribute to easy certain common tedious tasks:
+
+**count:**  return the number of elements in the line (including the ones in included lines)
+
+**length:**    the overall line length
+**angle:**     the overall line bending angle
+**flatten():** return a flattened version of the line (all sub-lines will be recursively expanded)
+**find():**    find the element index given a filter function provided by the user
+**locate():**  return the position in meters of a given element index
 
