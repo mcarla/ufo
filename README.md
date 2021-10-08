@@ -479,22 +479,27 @@ Methods:
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
 
 Examples:
+
+Compute the orbit distortion induced by each horizontal orbit corrector in the ALBA storage ring:
 ```
-import ufo
 import numpy
+import ufo
 
-fodo = ufo.Lattice(path='fodo.mad')
+alba = ufo.Lattice(path='../optics/alba.mad')
 
-count = 10
-parameters = [('QD', 'dx')]
-orbit = ufo.ClosedOrbit(fodo.RING, particles=count, parameters=parameters)
+#ALBA has orbit correctors integrated in the sextupoles
+correctors  = alba.RING.find(lambda e: type(e) == ufo.Sextupole)
+count = len(correctors) #number of correctors
+parameters = [(e, 'dx') for e in correctors] #add horizontal orbit correctors
 
-for i in range(count):
-    orbit.parameters[i] = numpy.random.randn() * 1e-3
+co = ufo.ClosedOrbit(alba.RING, particles=count, flags=ufo.FIVED, parameters=parameters)
+#the computation of the closed orbit distortion due to a corrector is assigned to a particle
+co.parameters[:, :] = numpy.identity(count) * 1e-3 
+co.run(threads=count) #the computation is run in parallel
 
-orbit.run(threads=count)
-print(orbit.orbits)
+print(co.orbits) #print the resulting closed orbit distortion associated to each corrector
 ```
+
 
 Parameters
 ----------
