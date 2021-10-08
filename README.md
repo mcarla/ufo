@@ -92,6 +92,8 @@ dkn, dks : list  -> List of normal and skew multipolar field errors
 How does it work?
 -----------------
 
+# How does it work?
+
 Besides a few utilities to manipulate the lattice, UFO provides a few classes to run physics simulations (tracking, closed-orbit... ).
 Those classes have been designed aiming to perfomance, therefore a few steps required to run the actual simulation
 could differ from other simulation codes and may look if anything unusual.
