@@ -1,5 +1,5 @@
 
-## How does it work?
+## _How does it work?_
 
 Besides a few utilities to manipulate the lattice, UFO provides a few classes to run physics simulations (tracking, closed-orbit... ).
 Those classes have been designed aiming to perfomance, therefore a few steps required to run the actual simulation
@@ -22,7 +22,7 @@ Parameters are specified per particle, therefore it is possible to run in parall
 as required for example to compute a response matrix, where the same simulation is run for different magnets settings.
 
 
-## Supported elements and parameters
+## _Supported elements and parameters_
 
 UFO support several elements (drift, quarupole, dipole...). Each element is identified by a unique label,
 furthermore the following keyword parameters are supported by each element:
@@ -79,7 +79,7 @@ qf = ufo.Quadrupole('qf', length=1, k1=2, dkn=[0, 0, 0])
 qf.dk2 = 0.3 #has the same effect as qf.dkn = [0., 0., 0.3]
 ```
 
-## Line(label, line=[])
+## _Line(label, line=[])_
 
 A line is a list of elements or other lines and is used to describe the ordering of a magnetic lattice.
 The Line class is derived from the python list class, therefore all the standard lists functionalities are available (`append, remove, copy...`)
@@ -89,7 +89,7 @@ The Line class is derived from the python list class, therefore all the standard
 
 The Line class is provided with some special function and attribute to easy certain common tedious tasks:
 
-#### Attributes:
+### Attributes:
 
 * **count:**  Teturn the number of elements in the line (including the ones in included lines)
 * **length:** The overall line length
@@ -122,7 +122,7 @@ ring.find(lambda e: e.label=='QD')
  > [2, 6, 10, 14]
 ```
 
-## Lattice(path=None)
+## _Lattice(path=None)_
 
 A lattice is a collection of elements and lines, it can be assembled manually or more conveniently from a file.
 The input file syntax is compatible with the MAD-X syntax, even if not all the MAD-X features are supported.
@@ -149,7 +149,7 @@ PERIOD: LINE=(QF, B, QD, B);
 RING:   LINE=(PERIOD, PERIOD, PERIOD, PERIOD);
 ```
 
-## Beam(energy=3e9, particle_mass=electron_mass, bunch_charge=1e-9, beam_current=0.25, ex=1e-9, ey=1e-9, bunch_length=6e-3, energy_spread=1e-3)
+## _Beam(energy=3e9, particle_mass=electron_mass, bunch_charge=1e-9, beam_current=0.25, ex=1e-9, ey=1e-9, bunch_length=6e-3, energy_spread=1e-3)_
 
 A Beam object collects all the informations relative to particles
 
@@ -161,7 +161,7 @@ A Beam object collects all the informations relative to particles
 * **bunch_length:**  longitudinal dimension of the bunch [m]
 * **energy_spread:** RMS energy spread of the bunch divided by the average bunch energy
 
-## dump(lattice, path, style='mad', beam=Beam())
+## _dump(lattice, path, style='mad', beam=Beam())_
 
 A lattice can be exported in a text file compatible with one of the following programs MAD-X, Elegant, Accelerator-Toolbox or OPA
 
@@ -178,7 +178,7 @@ lattice = ufo.Lattice('ring.mad')
 ufo.dump(lattice, 'ring.ele', style='elegant')
 ```
 
-## StableAperture(line, flags=0x00, turns=1000, particles=1000, parameters=[], dp=0., context=None, options=None)
+## _StableAperture(line, flags=0x00, turns=1000, particles=1000, parameters=[], dp=0., context=None, options=None)_
 
 Compute how many turns a particle survive in a ring. At the end of each turn the horizontal and vertical coordinates are checked, if found greater than 1m the particle will be considered as lost. Useful to estimate dynamic aperture and momentum aperture. Simulation parameters includes initial particle coordinates and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
 
@@ -277,7 +277,7 @@ print(sa.lost.reshape([count, count]))
 ```
 
 
-## Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)
+## _Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)_
 
 Track allows to track a bunch of particles through a line. Simulation parameters includes initial particle coordinates and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
 
@@ -302,7 +302,7 @@ Track allows to track a bunch of particles through a line. Simulation parameters
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
 
-## ClosedOrbit(line, flags=0x00, particles=1000, parameters=[], dp=0., iterations=200, context=None, options=None)
+## _ClosedOrbit(line, flags=0x00, particles=1000, parameters=[], dp=0., iterations=200, context=None, options=None)_
 
 Find the closed orbit by minimizing the residuals between initial and final coordinate of a particle tracked over one turn. The minimization is carried out using the Nelder–Mead method. The optimization process is iterated for a fixed number of times before stopping, no other stopping criteria is available. Simulation parameters includes initial closed orbit 'guess' and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to compute at the same time (in parallel hardware permitting) closed orbits with different optics settings, useful for example for response matrix.
 
@@ -378,7 +378,7 @@ in this case the output would be:
 ```
 Note how in the latter case the vertical coordinates are much closer to 0, as to be expected since no vertical orbit is produced by the correctors and no other errors are present in the lattice.
 
-## Optics(line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC, context=None, options=None
+## _Optics(line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC, context=None, options=None_
 
 ### Examples:
 The positions at which position dependent functions (betatron amplitudes, dispersion...) are evaluated, are specified as a list of float through the keyword argument 'where'. The integer part of each float represent the element index (in this case 1, the second element which happen to be a drift), while the fractional part represents a fraction of the length of the selected elemnt. Therefore in this example the functions will be evaluated in the middle of the first sdrift (to indicate the end of the line the jolly identifier -1 can be used):
@@ -394,7 +394,7 @@ opt.run()
 Results can be accessed through the class attributes: `bx, by, ax, ay, dx, dy, qx, qy` (i.e. `opt.qx`)
 Note that when computing periodic solutions optics functions are always computed also at the end of the line.
 
-## Parameters
+## _Parameters_
 
 Parameters are used to identify which variables will be specified independently for each particle and or need to be changed between one simulation run and another.
 There is no distinction between beam (intial particle coordinates...) and lattice (field strength...) .
@@ -439,7 +439,7 @@ print(co.orbits[0]) #Print the orbit of the first particle
 print(co.orbits[1]) #Print the orbit of the second particle
 ```
 
-## Flags
+## _Flags_
 
 Many simulations parameters are controlled by a set of boolean flags:
 
@@ -477,7 +477,7 @@ The output should resemble:
 
 In this case two back-ends are available. The first device (with id=0) is an Nvidia Quadro P600 GPU, while the second one is an Intel i5 CPU
 
-## context(device)
+## _context(device)_
 Given a device id it returns an OpenCL context suitable for all the simulation classes (Track, ClosedOrbit...). A list if the available back-ends and relative ids can be obtained with `list_devices()`
 
 * **device** is the OpenCL back-end id (where the first back-end has id 0, the second 1...).
@@ -493,7 +493,7 @@ lattice = ufo.Lattice(path='alba.mad')
 orbit = ufo.ClosedOrbit(lattice.RING, particles=count, context=ctx)
 ```
 
-## OpenCL options
+## _OpenCL options_
 
 By default the following OpenCL options are passed to the OpenCL back-end:
 
