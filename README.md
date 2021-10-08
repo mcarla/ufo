@@ -86,4 +86,6 @@ dx, dy   : float -> Horizontal and vertical alignment offset
 dkn, dks : list  -> List of normal and skew multipolar field errors
 ```
 
+## Documentation
+
 Refer to the [HOWTO](https://github.com/mcarla/ufo/blob/main/HOWTO.md) for further documentation.
