@@ -112,24 +112,6 @@ However when creating the simulation the user can provide a list of parameters t
 Parameters are specified per particle, therefore it is possible to run in parallel simulations for different 'flavor' of the same lattice,
 as required for example to compute a response matrix, where the same simulation is run for different magnets settings.
 
-A few examples
---------------
-
-### Twiss parameters
-
-In the following example the periodic optics functions for a simple FODO channel are computed.
-The positions at which position dependent functions (betatron amplitudes, dispersion...) are evaluated, are specified as a list of float through the keyword argument 'where'. The integer part of each float represent the element index (in this case 1, the second element which happen to be a drift), while the fractional part represents a fraction of the length of the selected elemnt. Therefore in this example the functions will be evaluated in the middle of the first sdrift (to indicate the end of the line the jolly identifier -1 can be used):
-
-```
-import ufo
-
-lat = ufo.Lattice(path='fodo.mad')
-opt = ufo.Optics(lat.RING, where=[1.5], periodic=True)
-opt.run()
-```
-
-Results can be accessed through the class attributes: `bx, by, ax, ay, dx, dy, qx, qy` (i.e. `opt.qx`)
-Note that when computing periodic solutions optics functions are always computed also at the end of the line.
 
 Supported elements and parameters
 ---------------------------------
@@ -556,6 +538,24 @@ in this case the output would be:
  .....
 ```
 Note how in the latter case the vertical coordinates are much closer to 0, as to be expected since no vertical orbit is produced by the correctors and no other errors are present in the lattice.
+
+Optics(line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC, context=None, options=None
+----------------------------------------------------------------------------------------------------------
+
+
+Examples:
+The positions at which position dependent functions (betatron amplitudes, dispersion...) are evaluated, are specified as a list of float through the keyword argument 'where'. The integer part of each float represent the element index (in this case 1, the second element which happen to be a drift), while the fractional part represents a fraction of the length of the selected elemnt. Therefore in this example the functions will be evaluated in the middle of the first sdrift (to indicate the end of the line the jolly identifier -1 can be used):
+
+```
+import ufo
+
+lat = ufo.Lattice(path='fodo.mad')
+opt = ufo.Optics(lat.RING, where=[1.5], periodic=True)
+opt.run()
+```
+
+Results can be accessed through the class attributes: `bx, by, ax, ay, dx, dy, qx, qy` (i.e. `opt.qx`)
+Note that when computing periodic solutions optics functions are always computed also at the end of the line.
 
 Parameters
 ----------
