@@ -99,9 +99,9 @@ Methods:
 
 * **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
 * **find(what):**       return a list of elements indices such that `what(element) == True`
-  * ***what:*** filter function should take as argument an element object and return a boolean (lambda functions here are pretty handy)
+  * **what:** filter function should take as argument an element object and return a boolean (lambda functions here are pretty handy)
 * **locate(element):**  return the position in meters of a given element index
-  * ***element:*** element object
+  * **element:** element object
 
 Examples:
 ```
