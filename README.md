@@ -382,36 +382,54 @@ Methods:
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
 
 Examples:
+
 ```
-import ufo
 import numpy
+import ufo
 
-optics = ufo.Lattice(path='alba.mad')
+alba = ufo.Lattice(path='alba.mad')
 
-count = 12 #Simulate a grid of 12x12 particles
+count = 12 #will be tracking a grid of 12x12 particles
 
-parameters = ['x', 'y', ('SF1', 'k2')]
-sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000,
-                        flags=ufo.FIVED, parameters=parameters, dp=0.)
+#we want to set an alignment error for each magnet -> find each individual magnet index:
+magnets  = alba.RING.find(lambda e: (type(e) in [ufo.Sbend, ufo.Quadrupole, ufo.Sextupole]))
 
-x = numpy.linspace(-0.04, 0.04, num=count) #Initial particle coordinates
-y = numpy.linspace(-0.04, 0.04, num=count) #Are arranged on a grid
-xx, yy = numpy.meshgrid(x, y, sparse=False)
+parameters  = ['x', 'y'] #iniatl particle coordinates
+parameters += [(e, 'dx') for e in magnets] #add horizontal and vertical alignement errors
+parameters += [(e, 'dy') for e in magnets]
 
-sa.parameters[:, 0] = xx.flatten()
+sa = ufo.StableAperture(alba.RING, particles=count**2, turns=1000, flags=ufo.methods.FIVED, parameters=parameters)
+
+x = y = numpy.linspace(-0.04, 0.04, num=count) #initial particle coordinates
+xx, yy = numpy.meshgrid(x, y, sparse=False)    #are on a square grid 4x4 cm^2
+
+sa.parameters[:, 0] = xx.flatten() #set the inial particles coordinates
 sa.parameters[:, 1] = yy.flatten()
-sa.parameters[:, 2] = 25.7971933671 #K2 of SF1
+
+#set a random 20um error for each magnet, but equal for each particle
+numpy.random.seed(0)
+sa.parameters[:, 2:] = numpy.random.randn(len(parameters) - 2) * 20e-6
 
 sa.run(threads=count**2)
-print('\n        Dynamic aperture with nominal parameters:\n')
-print(sa.lost.reshape([count, count]))
-
-sa.parameters[:, 2] = 25.7971933671 * 2.0 #K2 let's double the K2 of SF1
-sa.run(threads=count**2)
-
-print('\n        Dynamic aperture with double strength for SF1:\n')
 print(sa.lost.reshape([count, count]))
 ```
+In the previous example the dynamic aperture is calculated by tracking a grid of 12x12 particles, equally spaced in the transverse plane.
+A horizontal and vertical alignement error is also added individually to each magnet of the lattice. This examample code should produce the following output:
+```
+[[   0    0    0    0    0    0    0    0    0    0    0    0]
+ [   0    0    0    1    0    0    0    0    0    0    0    0]
+ [   0    1    1    2    0    0    0    0    1    2    2    0]
+ [   0    1    3    2    7    1    1    5    4    2    4    0]
+ [   0    1    3   85  204 1000 1000   16  130    2    2    0]
+ [   0    2   47 1000 1000 1000 1000 1000 1000  174    5    1]
+ [   1    2  341 1000 1000 1000 1000 1000  528   15    2    3]
+ [   0    1    9  869 1000 1000 1000  468  628   13    1    0]
+ [   0    6    3    4   22    1    8    4    8    5    7    1]
+ [   0    1   20   10    0    0    0    1    6    3    0    0]
+ [   0    0    4    0    0    0    0    0    0    0    0    0]
+ [   0    0    0    0    0    0    0    0    0    0    0    0]]
+```
+
 
 Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)
 ---------------------------------------------------------------------------------------------------------------
