@@ -139,43 +139,6 @@ orbit.run(threads=count)
 print(orbit.orbits)
 ```
 
-### Dynamic Aperture
-
-Dynamic aperture can be simulated through the StableAperture class.
-The parameters 'x' and 'y' allow to set the initial particles coordinates.
-The output of the simulation is the number of turns each particle survived and can be accessed through the attribute `lost`. 
-
-```
-import ufo
-import numpy
-
-optics = ufo.Lattice(path='alba.mad')
-
-count = 12 #Simulate a grid of 12x12 particles
-
-parameters = ['x', 'y', ('SF1', 'k2')]
-sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000,
-                        flags=ufo.FIVED, parameters=parameters, dp=0.)
-
-x = numpy.linspace(-0.04, 0.04, num=count) #Initial particle coordinates
-y = numpy.linspace(-0.04, 0.04, num=count) #Are arranged on a grid
-xx, yy = numpy.meshgrid(x, y, sparse=False)
-
-sa.parameters[:, 0] = xx.flatten()
-sa.parameters[:, 1] = yy.flatten()
-sa.parameters[:, 2] = 25.7971933671 #K2 of SF1
-
-sa.run(threads=count**2)
-print('\n        Dynamic aperture with nominal parameters:\n')
-print(sa.lost.reshape([count, count]))
-
-sa.parameters[:, 2] = 25.7971933671 * 2.0 #K2 let's double the K2 of SF1
-sa.run(threads=count**2)
-
-print('\n        Dynamic aperture with double strength for SF1:\n')
-print(sa.lost.reshape([count, count]))
-```
-
 ### Twiss parameters
 
 In the following example the periodic optics functions for a simple FODO channel are computed.
@@ -417,6 +380,38 @@ Methods:
 
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
+
+Examples:
+```
+import ufo
+import numpy
+
+optics = ufo.Lattice(path='alba.mad')
+
+count = 12 #Simulate a grid of 12x12 particles
+
+parameters = ['x', 'y', ('SF1', 'k2')]
+sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000,
+                        flags=ufo.FIVED, parameters=parameters, dp=0.)
+
+x = numpy.linspace(-0.04, 0.04, num=count) #Initial particle coordinates
+y = numpy.linspace(-0.04, 0.04, num=count) #Are arranged on a grid
+xx, yy = numpy.meshgrid(x, y, sparse=False)
+
+sa.parameters[:, 0] = xx.flatten()
+sa.parameters[:, 1] = yy.flatten()
+sa.parameters[:, 2] = 25.7971933671 #K2 of SF1
+
+sa.run(threads=count**2)
+print('\n        Dynamic aperture with nominal parameters:\n')
+print(sa.lost.reshape([count, count]))
+
+sa.parameters[:, 2] = 25.7971933671 * 2.0 #K2 let's double the K2 of SF1
+sa.run(threads=count**2)
+
+print('\n        Dynamic aperture with double strength for SF1:\n')
+print(sa.lost.reshape([count, count]))
+```
 
 Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)
 ---------------------------------------------------------------------------------------------------------------
