@@ -499,6 +499,16 @@ co.run(threads=count) #the computation is run in parallel
 
 print(co.orbits) #print the resulting closed orbit distortion associated to each corrector
 ```
+co.orbits contains the computed closed orbits coordinates (x, px, y, py) at the start of the ring. Each line refers to a different corrector.
+The output should look like:
+```
+[[-1.02040898e-02  1.13984599e-04  9.17463865e-08  5.00920976e-08]
+ [ 2.41565565e-03 -2.08511256e-06  4.48269510e-09  3.14541393e-10]
+ [-1.65234436e-03  9.69179673e-05 -3.87917520e-09 -6.64652666e-10]
+ [-5.42064058e-03 -2.18717396e-04  3.41765201e-07  1.20489844e-07]
+ [-2.21753307e-03  5.08581252e-05  9.60700497e-09  5.85440696e-10]
+ .....
+```
 
 
 Parameters
