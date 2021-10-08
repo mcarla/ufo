@@ -14,9 +14,13 @@ import ufo
 def __dk_from_kwargs__(kwargs, dkn, dks):
     for prm, value in kwargs.items():
         if prm[:2] == 'dk' and prm[2:].isdigit(): #Normal
-            dkn[int(prm[2:])] = value
+            idx = int(prm[2:])
+            dkn += [0.] * (idx + 1 - len(dkn)) #pad list to length
+            dkn[idx] = value
         if prm[:2] == 'dk' and prm[-1] == 's' and prm[2:-1].isdigit(): #Skew
-            dks[int(prm[2:-1])] = value
+            idx = int(prm[2:-1])
+            dks += [0.] * (idx + 1 - len(dks)) #pad list to length
+            dks[idx] = value
 
 class Element():
     def __init__(self):
