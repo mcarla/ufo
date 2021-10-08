@@ -204,7 +204,7 @@ Compute how many turns a particle survive in a ring. At the end of each turn the
 
 ### Examples:
 
-- Compute the dynamic aperture of the ALBA ring by tracking a grid of 12x12 particles equally spaced in the transverse plane:
+1. Compute the dynamic aperture of the ALBA ring by tracking a grid of 12x12 particles equally spaced in the transverse plane:
 ```
 import numpy
 import ufo
@@ -244,7 +244,7 @@ This examample code should produce the following output:
  [   0    0    0    0    0    0    0    0    0    0    0    0]]
 ```
 
-- In the following example an octupolar field error is added independently to each quadrupole.
+2. An octupolar field error is now added independently to each quadrupole.
 Note that field errors (dkn / dks) are not implemented in thick elements such as Sbend, Rbend and Quadrupole, therefore the teapot expansion should be enabled by setting the **KICK** flag when calling StableAperture. The teapot expansion will convert thick elements in a succession of thin kicks and drifts, allowing to include higher order multipoles but resulting in a usually slower execution time. More informations on how to set the number of slices used in the teapot expansion is found in the section **flags**.
 ```
 import numpy
