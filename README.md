@@ -399,6 +399,9 @@ This examample code should produce the following output:
  [   0    0    0    0    0    0    0    0    0    0    0    0]]
 ```
 
+In the following example an octupolar field error is added independently to each quadrupole.
+Note that field errors (dkn / dks) are not implemented only in thick elements (Sbend, Rbend and Quadrupole), therefore the teapot expansion should be enabled by setting the **KICK** flag when calling StableAperture:
+
 ```
 import numpy
 import ufo
@@ -429,22 +432,6 @@ sa.parameters[:, 2:] = numpy.random.randn(len(parameters) - 2) * 100.
 
 sa.run(threads=count**2)
 print(sa.lost.reshape([count, count]))
-```
-
-An octupolar field error is added to each quadrupole of the lattice. This examample code should produce the following output:
-```
-[[   0    0    0    0    0    0    0    0    0    0    0    0]
- [   0    0    0    0    0    0    0    0    0    0    0    0]
- [   0    0    0    0    0    0    0    0    2    0    1    0]
- [   0    1    5    2    2    1    2    5    5    3    1    0]
- [   0    1   17  501 1000 1000 1000   64   64    6    0    0]
- [   0    1    6   86 1000 1000 1000 1000  296    3    1    0]
- [   0    1    6   86 1000 1000 1000 1000  296    3    1    0]
- [   0    1   17  501 1000 1000 1000   64   64    6    0    0]
- [   0    1    5    2    2    1    2    5    5    3    1    0]
- [   0    0    0    0    0    0    0    0    2    0    1    0]
- [   0    0    0    0    0    0    0    0    0    0    0    0]
- [   0    0    0    0    0    0    0    0    0    0    0    0]]
 ```
 
 
