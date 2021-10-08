@@ -449,7 +449,20 @@ also the results returned by the simulation (tracking, closed-orbit...) are orga
 
 Examples:
 ```
+parameters = [('QD', 'dx'), ('QF', 'dy')]
 
+co = ufo.ClosedOrbit(lattice.RING, particles=3, parameters=parameters) #Simulate 3 particles
+
+co.parameters[0, 0] = 1e-4 #Set QD.dx = 100um for particle 0
+co.parameters[1, 0] = 2e-4 #Set QD.dx = 200um for particle 1
+co.parameters[2, 0] = 3e-4 #Set QD.dx = 300um for particle 2
+
+co.parameters[:, 1] = 5e-4 #Set QF.dy = 500um for all particles
+
+co.run(threads=10)
+
+print(co.orbits[0]) #Print the orbit of the first particle 
+print(co.orbits[1]) #Print the orbit of the second particle
 ```
 
 Flags
