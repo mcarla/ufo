@@ -480,7 +480,7 @@ Methods:
 
 Examples:
 
-Compute the orbit distortion induced by each horizontal orbit corrector in the ALBA storage ring:
+Compute the orbit distortion induced by each horizontal orbit corrector (horizontal orbit response matrix) in the ALBA storage ring:
 ```
 import numpy
 import ufo
