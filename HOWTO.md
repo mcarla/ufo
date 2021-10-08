@@ -89,19 +89,19 @@ The Line class is derived from the python list class, therefore all the standard
 
 The Line class is provided with some special function and attribute to easy certain common tedious tasks:
 
-Attributes:
+#### Attributes:
 
 * **count:**  Teturn the number of elements in the line (including the ones in included lines)
 * **length:** The overall line length
 * **angle:**  The overall line bending angle
 
-Methods:
+#### Methods:
 
 * **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
 * **find(what):**       return a list of elements indices that satisfy the condition `what(element) == True`, where what() is a user specified test function that takes as argument an element object and return a boolean (lambda functions here are pretty handy)
 * **locate(element):**  return the position in meters of a given element index. The element index is specified as a floating variable, where the integer part identifies the element index while the fractional part is the position along the element expressed as a fraction of the entire element length. The special position -1 identify the end of the line
 
-Examples:
+#### Examples:
 ```
 import ufo
 
@@ -129,7 +129,7 @@ The input file syntax is compatible with the MAD-X syntax, even if not all the M
 
 * **path:** input file path, if not specified an empty lattice is generated
 
-Examples:
+#### Examples:
 ```
 import ufo
 
@@ -170,7 +170,7 @@ A lattice can be exported in a text file compatible with one of the following pr
 * **style:**   A string representing the syntax to be used. It can be 'mad', 'elegant', 'at' or 'opa'
 * **beam:**    Beam informations are used only in when exporting to 'at' or 'opa'
 
-Examples:
+#### Examples:
 ```
 import ufo
 
@@ -191,18 +191,18 @@ Compute how many turns a particle survive in a ring. At the end of each turn the
 * **context:** an OpenCL context as returned by `ufo.context()`
 * **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
-Attributes:
+#### Attributes:
 
 * **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
 * **lost** the output buffer where the number of turns made by each particle before getting lost will be stored
 * **src:** source code of the OpenCL kernel, useful for debugging
 
-Methods:
+#### Methods:
 
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
 
-Examples:
+#### Examples:
 
 Compute the dynamic aperture of the ALBA ring by tracking a grid of 12x12 particles equally spaced in the transverse plane:
 ```
@@ -291,13 +291,13 @@ Track allows to track a bunch of particles through a line. Simulation parameters
 * **context:** an OpenCL context as returned by `ufo.context()`
 * **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
-Attributes:
+#### Attributes:
 
 * **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
 * **tracks** the output buffer where the tracking results will be stored
 * **src:** source code of the OpenCL kernel, useful for debugging
 
-Methods:
+#### Methods:
 
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
@@ -315,18 +315,18 @@ Find the closed orbit by minimizing the residuals between initial and final coor
 * **context:** an OpenCL context as returned by `ufo.context()`
 * **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
-Attributes:
+#### Attributes:
 
 * **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
 * **orbits** the output buffer where the closed orbits will be stored
 * **src:** source code of the OpenCL kernel, useful for debugging
 
-Methods:
+#### Methods:
 
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
 
-Examples:
+#### Examples:
 
 Compute the orbit distortion induced by each horizontal orbit corrector (horizontal orbit response matrix) in the ALBA storage ring:
 ```
@@ -380,7 +380,7 @@ Note how in the latter case the vertical coordinates are much closer to 0, as to
 
 ## Optics(line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC, context=None, options=None
 
-Examples:
+#### Examples:
 The positions at which position dependent functions (betatron amplitudes, dispersion...) are evaluated, are specified as a list of float through the keyword argument 'where'. The integer part of each float represent the element index (in this case 1, the second element which happen to be a drift), while the fractional part represents a fraction of the length of the selected elemnt. Therefore in this example the functions will be evaluated in the middle of the first sdrift (to indicate the end of the line the jolly identifier -1 can be used):
 
 ```
@@ -401,7 +401,7 @@ There is no distinction between beam (intial particle coordinates...) and lattic
 Particle coordinates parameters are identified by the strings: `'x', 'px', 'y', 'py', 'z', 'dp'`. While lattice parameters are identified by tuples of two elements, the first one identify an element or a family of elements and the second one the actual name of the parameter.
 When not specified the beam parameters x, px... will be set to 0, while the lattice parameters will be set to the value defined in the lattice at the time the simulation is instantiated. Once a simulation has been instantiated, changing any value of an element will not have any effect on the simulations, only parameters defined throught the parameters argument can be changed (through the parameters attribute). 
 
-Examples:
+#### Examples:
 
 'k1' of the first element of the line is a parameter:
 ```
@@ -421,7 +421,7 @@ parameters = ['x', 'y', ('QF', 'length'), (2, 'k2')]
 The parameters buffer (simulation attribute) contains one entry for each specified parameter reflecting the ordering of the parameters list,
 also the results returned by the simulation (tracking, closed-orbit...) are organized the same way.
 
-Examples:
+#### Examples:
 ```
 parameters = [('QD', 'dx'), ('QF', 'dy')]
 
@@ -462,7 +462,7 @@ Print on the screen a list of the available OpenCL back-ends and relative id
 
 * **device** id of a device, if specified will return a device descriptor
 
-Examples:
+#### Examples:
 ```
 import ufo
 
@@ -482,7 +482,7 @@ Given a device id it returns an OpenCL context suitable for all the simulation c
 
 * **device** is the OpenCL back-end id (where the first back-end has id 0, the second 1...).
 
-Examples:
+#### Examples:
 ```
 import ufo
 
