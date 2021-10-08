@@ -85,3 +85,5 @@ k1       : float -> Strength of the quadrupolar component
 dx, dy   : float -> Horizontal and vertical alignment offset
 dkn, dks : list  -> List of normal and skew multipolar field errors
 ```
+
+Refer to the [HOWTO](https://duckduckgo.com) for further documentation.
