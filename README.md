@@ -115,30 +115,6 @@ as required for example to compute a response matrix, where the same simulation 
 A few examples
 --------------
 
-### Closed orbit
-
-Closed orbit calculation is carried out by the ClosedOrbit class.
-In this example the computation is repeated 10 times for 10 different random horizontal misalignment of 'QD'.
-note that if 'QD' appears multiple times in the lattice, the same 'dx' error would be applied to the entire family.
-To point a specific element, the element-index number can be used (the position in the lattice)
-
-```
-import ufo
-import numpy
-
-fodo = ufo.Lattice(path='fodo.mad')
-
-count = 10
-parameters = [('QD', 'dx')]
-orbit = ufo.ClosedOrbit(fodo.RING, particles=count, parameters=parameters)
-
-for i in range(count):
-    orbit.parameters[i] = numpy.random.randn() * 1e-3
-
-orbit.run(threads=count)
-print(orbit.orbits)
-```
-
 ### Twiss parameters
 
 In the following example the periodic optics functions for a simple FODO channel are computed.
@@ -466,6 +442,59 @@ Methods:
 
 * **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
   * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
+
+ClosedOrbit(line, flags=0x00, particles=1000, parameters=[], dp=0., iterations=200, context=None, options=None)
+---------------------------------------------------------------------------------------------------------------
+
+### Closed orbit
+Find the closed orbit by minimizing the residuals between initial and final coordinate of a particle tracked over one turn. The minimization is carried out using the Nelder–Mead method. The optimization process is iterated for a fixed number of times before stopping, no other stopping criteria is available. Simulation parameters includes initial closed orbit 'guess' and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to compute at the same time (in parallel hardware permitting) closed orbits with different optics settings, useful for example for response matrix.
+
+* **line:**  the Line object to be used for closed orbit computation
+
+* **flags:** flags to control specific tracking options, see section **flags** for detailed informations
+
+* **particles:** the number of closed orbits to be computed
+
+* **parameters:** a list of parameters to be allowed for variation, see section **parameters** for detailed informations
+
+* **dp:** relative energy deviation used when the **FIVED** flag is set (5D simulation)
+
+*  **iteration:** the number of iterations of the Nelder-Mead minimization before stopping the search 
+
+* **context:** an OpenCL context as returned by `ufo.context()`
+
+* **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
+
+Attributes:
+
+* **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
+
+* **orbits** the output buffer where the closed orbits will be stored
+
+* **src:** source code of the OpenCL kernel, useful for debugging
+
+Methods:
+
+* **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
+  * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
+
+Examples:
+```
+import ufo
+import numpy
+
+fodo = ufo.Lattice(path='fodo.mad')
+
+count = 10
+parameters = [('QD', 'dx')]
+orbit = ufo.ClosedOrbit(fodo.RING, particles=count, parameters=parameters)
+
+for i in range(count):
+    orbit.parameters[i] = numpy.random.randn() * 1e-3
+
+orbit.run(threads=count)
+print(orbit.orbits)
+```
 
 Parameters
 ----------
