@@ -444,6 +444,14 @@ Multiples parameters can be specified for one simulation. In this case we want t
 parameters = ['x', 'y', ('QF', 'length'), (2, 'k2')]
 ```
 
+The parameters buffer (simulation attribute) contains one entry for each specified parameter reflecting the ordering of the parameters list,
+also the results returned by the simulation (tracking, closed-orbit...) are organized the same way.
+
+Examples:
+```
+
+```
+
 Flags
 -----
 
