@@ -213,17 +213,17 @@ optics = ufo.Lattice(path='../optics/alba.mad')
 
 count = 12
 
-parameters = ['x', 'y']
+parameters = ['x', 'y'] #the only simulation parameters are the horizontal and vertical inital position of each particle
 sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000, flags=ufo.FIVED, parameters=parameters)
 
 x = y = numpy.linspace(-0.04, 0.04, num=count)
 xx, yy = numpy.meshgrid(x, y, sparse=False)
 
-sa.parameters[:, 0] = xx.flatten()
-sa.parameters[:, 1] = yy.flatten()
+sa.parameters[:, 0] = xx.flatten()   #initialize the horizontal and
+sa.parameters[:, 1] = yy.flatten()   #the vertical initial position of each particle
 
-sa.run(threads=count**2)
-print(sa.lost.reshape([count, count]))
+sa.run(threads=count**2)  #start the simulation running 144 threads in parallel
+print(sa.lost.reshape([count, count]))  #print how many turns each particle survived
 ```
 The attribute 'lost' contains the number of turns each particle survived in the ring (in this particular case 1000 is the maximum number of tracked turns).
 This examample code should produce the following output:
