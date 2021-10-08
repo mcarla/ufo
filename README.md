@@ -397,8 +397,6 @@ quadrupoles  = alba.RING.find(lambda e: type(e) == ufo.Quadrupole)
 parameters  = ['x', 'y'] #iniatl particle coordinates
 parameters += [(e, 'dk3') for e in quadrupoles] #add individual octupolar errors at each quadrupole
 
-alba.QF1.dkn = alba.QF2.dkn = alba.QF3.dkn = alba.QF4.dkn = alba.QF5.dkn = alba.QF6.dkn = alba.QF7.dkn = alba.QF8.dkn = alba.QD1.dkn = alba.QD2.dkn = alba.QD3.dkn = [0, 0, 0, 0]
-
 sa = ufo.StableAperture(alba.RING, particles=count**2, turns=1000, flags=ufo.FIVED | ufo.KICK, parameters=parameters)
 
 x = y = numpy.linspace(-0.04, 0.04, num=count) #initial particle coordinates
