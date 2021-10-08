@@ -502,14 +502,33 @@ print(co.orbits) #print the resulting closed orbit distortion associated to each
 co.orbits contains the computed closed orbits coordinates (x, px, y, py) at the start of the ring. Each line refers to a different corrector.
 The output should look like:
 ```
-[[-1.02040898e-02  1.13984599e-04  9.17463865e-08  5.00920976e-08]
- [ 2.41565565e-03 -2.08511256e-06  4.48269510e-09  3.14541393e-10]
- [-1.65234436e-03  9.69179673e-05 -3.87917520e-09 -6.64652666e-10]
- [-5.42064058e-03 -2.18717396e-04  3.41765201e-07  1.20489844e-07]
- [-2.21753307e-03  5.08581252e-05  9.60700497e-09  5.85440696e-10]
+[[-3.5447621e-05  2.8344164e-07  3.0312110e-11  1.0759697e-11]
+ [ 3.4938712e-05 -3.2280422e-08 -9.1950558e-11 -3.7141124e-11]
+ [-2.1214004e-05  1.2076521e-06  1.7580287e-10  9.8768577e-11]
+ [ 7.0103335e-05 -2.6784724e-06  1.3894609e-11  3.1442112e-12]
+ [-2.8944047e-05  6.6649659e-07 -1.3028309e-10 -3.6299064e-11]
+ [ 2.6881035e-05 -3.5004368e-06  1.3336779e-10  3.4140406e-11]
+ [-4.7772559e-05  4.6686437e-06  5.3740880e-11 -1.1813918e-12]
+ [-4.0694591e-05 -5.1691532e-06 -1.2420462e-10 -2.4220487e-11]
  .....
 ```
-
+Computation precision can be increased at expenses of speed, by setting the **DOUBLE_PRECISION** flag:
+```
+co = ufo.ClosedOrbit(alba.RING, particles=count, flags=ufo.FIVED | ufo.DOUBLE_PRECISION, parameters=parameters)
+```
+in this case the output would be:
+```
+[[-3.54477825e-05  2.83433330e-07  2.25021296e-14  9.49363972e-15]
+ [ 3.49391547e-05 -3.22556427e-08  3.01302730e-14  9.52440403e-15]
+ [-2.12181378e-05  1.20743209e-06  1.33593614e-15 -1.50655993e-16]
+ [ 7.01036233e-05 -2.67849563e-06  1.72146152e-15  2.17456827e-15]
+ [-2.89429422e-05  6.66562989e-07  3.49636411e-14  2.38165648e-15]
+ [ 2.68826620e-05 -3.50035798e-06  9.86471226e-15  2.30303455e-15]
+ [-4.77740103e-05  4.66845109e-06 -5.43795223e-14 -1.48958729e-14]
+ [-4.06958218e-05 -5.16921708e-06  2.87191971e-15 -1.74380874e-14]
+ .....
+```
+Note how in the latter case the vertical coordinates are much closer to 0, as to be expected since no vertical orbit is produced by the correctors and no other errors are present in the lattice.
 
 Parameters
 ----------
