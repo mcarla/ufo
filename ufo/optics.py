@@ -42,7 +42,7 @@ class Optics():
     options    : str     -> OpenCL compiler options
     """
     def __init__(self, line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC,
-                 context=cl_utils.context(0), options=None):
+                 context=None, options=None):
 
         self.ctx      = context if context else ufo.DEFAULT_CONTEXT
         self.queue    = cl.CommandQueue(self.ctx)

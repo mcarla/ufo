@@ -35,7 +35,7 @@ class StableAperture():
     options    : str     -> OpenCL compiler options
     """
     def __init__(self, line, flags=0x00, turns=1000, particles=1000, parameters=[], dp=0.,
-                 context=cl_utils.context(0), options=None):
+                 context=None, options=None):
 
         self.turns = turns
         self.ctx   = context if context else ufo.DEFAULT_CONTEXT
@@ -126,7 +126,7 @@ class StableAperture():
         kernel += "}\n"
 
         self.src = kernel
-        self.kernel = cl.Program(context, kernel).build(options=options)
+        self.kernel = cl.Program(self.ctx, kernel).build(options=options)
 
     def run(self, threads=1):
         """

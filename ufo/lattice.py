@@ -118,7 +118,7 @@ class Line(list):
 
         return code
 
-    def flatten(self):
+    def flatten(self, reverse=False):
         """Return a flattened version of the line (all lines are expanded into its composing elements)"""
         flat = [e.flatten() if getattr(e, 'flatten', None) else [e] for e in self]
         return sum(flat, []) #Flatten list of lists
@@ -163,7 +163,7 @@ class Beam():
         self.bunch_length = bunch_length
         self.energy_spread = energy_spread
 
-def dump(lattice, path, style='mad', beam=Beam()): #style can be 'mad', 'elegant', 'at' or opa
+def dump(lattice, path, style='mad', beam=Beam()): #style can be 'mad', 'elegant', 'at' or 'opa'
     """
     Save an antire lattice to a file compatible with mad, elegant,
     accelerator-toolbox or opa

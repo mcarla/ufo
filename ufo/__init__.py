@@ -20,7 +20,7 @@ DEFAULT_SEXTUPOLE_SLICES  = 4
 DEFAULT_OCTUPOLE_SLICES   = 4
 
 DEFAULT_CL_OPTIONS = '-cl-fast-relaxed-math -cl-mad-enable'
-DEFAULT_CONTEXT = context(0)
+DEFAULT_CONTEXT = ufo.context(0)
 
 __all__ = ['Lattice', 'Beam', 'Line', 'Track']
 

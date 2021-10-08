@@ -144,7 +144,7 @@ class ClosedOrbit():
     options    : str     -> OpenCL compiler options
     """
     def __init__(self, line, flags=0x00, particles=1000, parameters=[], dp=0.,
-                 iterations=200, context=cl_utils.context(0), options=None):
+                 iterations=200, context=None, options=None):
 
         self.ctx   = context if context else ufo.DEFAULT_CONTEXT
         self.queue = cl.CommandQueue(self.ctx)
@@ -231,7 +231,7 @@ class ClosedOrbit():
         kernel += "}\n"
 
         self.src = kernel
-        self.kernel = cl.Program(context, kernel).build(options=options)
+        self.kernel = cl.Program(self.ctx, kernel).build(options=options)
 
     def run(self, threads=1):
         """
