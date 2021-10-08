@@ -485,7 +485,7 @@ Compute the orbit distortion induced by each horizontal orbit corrector (horizon
 import numpy
 import ufo
 
-alba = ufo.Lattice(path='../optics/alba.mad')
+alba = ufo.Lattice(path='alba.mad')
 
 #ALBA has orbit correctors integrated in the sextupoles
 correctors  = alba.RING.find(lambda e: type(e) == ufo.Sextupole)
