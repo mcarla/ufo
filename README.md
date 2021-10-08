@@ -384,16 +384,50 @@ lattice = ufo.Lattice('ring.mad')
 ufo.dump(lattice, 'ring.ele', style='elegant')
 ```
 
-Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)
--------------------
+StableAperture(line, flags=0x00, turns=1000, particles=1000, parameters=[], dp=0., context=None, options=None)
+--------------------------------------------------------------------------------------------------------------
 
-Track allows to track a bunch of particles through a line. Tracking parameters includes intial particle conditions and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified of a per-particle basis, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
+Compute how many turns a particle survive in a ring. At the end of each turn the horizontal and vertical coordinates are checked, if found greater than 1m the particle will be considered as lost. Useful to estimate dynamic aperture and momentum aperture. Simulation parameters includes initial particle coordinates and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
 
 * **line:**  the Line object to be used for tracking
 
 * **flags:** flags to control specific tracking options, see section **flags** for detailed informations
 
-* **turns:** the number of turns to tracked
+* **turns:** the maximum number of turns to be tracked
+
+* **particles:** the number of particles to be tracked
+
+* **parameters:** a list of parameters to be allowed for variation, see section **parameters** for detailed informations
+
+* **dp:** relative energy deviation used when the **FIVED** flag is set (5D simulation)
+
+* **context:** an OpenCL context as returned by `ufo.context()`
+
+* **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
+
+Attributes:
+
+* **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
+
+* **lost** the output buffer where the number of turns made by each particle before getting lost will be stored
+
+* **src:** source code of the OpenCL kernel, useful for debugging
+
+Methods:
+
+* **run(threads=1):** run the simulation. The simulation can be run as many times as necessary and the parameters changed between each run
+  * **threads:** number of threads to be run in parallel. Is up to the user to determine the best value in terms of performance. For a CPU the optimum is usually the number of available cores. For a GPU the optimum is usually a multiple of the number of cores (2, 3 or 4 times the number of cores seems to be the sweet spot). Therefore for a small GPU threads can be as high as ~10^3, for high end GPU ~10^4 is normal.
+
+Track(line, flags=0x00, turns=1000, particles=1000, parameters=[], where=[], dp=0., context=None, options=None)
+---------------------------------------------------------------------------------------------------------------
+
+Track allows to track a bunch of particles through a line. Simulation parameters includes initial particle coordinates and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
+
+* **line:**  the Line object to be used for tracking
+
+* **flags:** flags to control specific tracking options, see section **flags** for detailed informations
+
+* **turns:** the number of turns to be tracked
 
 * **particles:** the number of particles to be tracked
 
