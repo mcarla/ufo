@@ -546,6 +546,42 @@ Many simulations parameters are controlled by a set of boolean flags:
 * **DOUBLE_PRECISION:** use 64 bit variables instead of 32 bit. Double precision allows for higher precision at the expense of performance (expecially on GPU)
 * **ACHROMATIC:**       suppress the chromatic focusing effects. Useful for dispersion computation
 
+## list_devices(device=None)
+Print on the screen a list of the available OpenCL back-ends and relative id
+
+* **device** id of a device, if specified will return a device descriptor
+
+Examples:
+```
+import ufo
+
+ufo.list_devices()
+```
+
+The output should resemble:
+```
+0:   Quadro P600
+1:   pthread-Intel(R) Core(TM) i5-8400 CPU @ 2.80GHz
+```
+
+In this case two back-ends are available. The first device (with id=0) is an Nvidia Quadro P600 GPU, while the second one is an Intel i5 CPU
+
+## context(device)
+Given a device id it returns an OpenCL context suitable for all the simulation classes (Track, ClosedOrbit...). A list if the available back-ends and relative ids can be obtained with `list_devices()`
+
+* **device** is the OpenCL back-end id (where the first back-end has id 0, the second 1...).
+
+Examples:
+```
+import ufo
+
+ctx = ufo.context(0)
+
+lattice = ufo.Lattice(path='alba.mad')
+
+orbit = ufo.ClosedOrbit(lattice.RING, particles=count, context=ctx)
+```
+
 ## OpenCL options
 
 By default the following OpenCL options are passed to the OpenCL back-end:
