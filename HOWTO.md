@@ -98,10 +98,8 @@ Attributes:
 Methods:
 
 * **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
-* **find(what):**       return a list of elements indices such that `what(element) == True`
-  * **what:** filter function should take as argument an element object and return a boolean (lambda functions here are pretty handy)
-* **locate(element):**  return the position in meters of a given element index
-  * **element:** element object
+* **find(what):**       return a list of elements indices that satisfy the condition `what(element) == True`, where what() is a user specified test function that takes as argument an element object and return a boolean (lambda functions here are pretty handy)
+* **locate(element):**  return the position in meters of a given element index. The element index is specified as a floating variable, where the integer part identifies the element index while the fractional part is the position along the element expressed as a fraction of the entire element length. The special position -1 identify the end of the line
 
 Examples:
 ```
