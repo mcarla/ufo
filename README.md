@@ -359,6 +359,46 @@ Methods:
 
 Examples:
 
+Compute the dynamic aperture of the ALBA ring by tracking a grid of 12x12 particles equally spaced in the transverse plane:
+```
+import numpy
+import ufo
+
+optics = ufo.Lattice(path='../optics/alba.mad')
+
+count = 12
+
+parameters = ['x', 'y']
+sa = ufo.StableAperture(optics.RING, particles=count**2, turns=1000, flags=ufo.FIVED, parameters=parameters)
+
+x = y = numpy.linspace(-0.04, 0.04, num=count)
+xx, yy = numpy.meshgrid(x, y, sparse=False)
+
+sa.parameters[:, 0] = xx.flatten()
+sa.parameters[:, 1] = yy.flatten()
+
+sa.run(threads=count**2)
+print(sa.lost.reshape([count, count]))
+```
+The attribute 'lost' contains the number of turns each particle survived in the ring (in this particular case 1000 is the maximum number of tracked turns).
+This examample code should produce the following output:
+
+
+```
+[[   0    0    0    0    0    0    0    0    0    0    0    0]
+ [   0    0    0    0    0    0    0    0    0    0    0    0]
+ [   0    1    1    2    0    0    1    1    2    2    1    0]
+ [   0    2   30    4    8    1    7   14    8    2    6    0]
+ [   0    1   11 1000 1000 1000 1000  981   52    6    1    0]
+ [   0    4 1000 1000 1000 1000 1000 1000 1000 1000    2    1]
+ [   0    4 1000 1000 1000 1000 1000 1000 1000 1000    2    1]
+ [   0    1   11 1000 1000 1000 1000  981   52    6    1    0]
+ [   0    2   30    4    8    1    7   14    8    2    6    0]
+ [   0    1    1    2    0    0    1    1    2    2    1    0]
+ [   0    0    0    0    0    0    0    0    0    0    0    0]
+ [   0    0    0    0    0    0    0    0    0    0    0    0]]
+```
+
 ```
 import numpy
 import ufo
@@ -367,14 +407,15 @@ alba = ufo.Lattice(path='alba.mad')
 
 count = 12 #will be tracking a grid of 12x12 particles
 
-#we want to set an alignment error for each magnet -> find each individual magnet index:
-magnets  = alba.RING.find(lambda e: (type(e) in [ufo.Sbend, ufo.Quadrupole, ufo.Sextupole]))
+#we want to set an octupolar error at each quadrupole -> find each individual quadrupole:
+quadrupoles  = alba.RING.find(lambda e: type(e) == ufo.Quadrupole)
 
 parameters  = ['x', 'y'] #iniatl particle coordinates
-parameters += [(e, 'dx') for e in magnets] #add horizontal and vertical alignement errors
-parameters += [(e, 'dy') for e in magnets]
+parameters += [(e, 'dk3') for e in quadrupoles] #add individual octupolar errors at each quadrupole
 
-sa = ufo.StableAperture(alba.RING, particles=count**2, turns=1000, flags=ufo.methods.FIVED, parameters=parameters)
+alba.QF1.dkn = alba.QF2.dkn = alba.QF3.dkn = alba.QF4.dkn = alba.QF5.dkn = alba.QF6.dkn = alba.QF7.dkn = alba.QF8.dkn = alba.QD1.dkn = alba.QD2.dkn = alba.QD3.dkn = [0, 0, 0, 0]
+
+sa = ufo.StableAperture(alba.RING, particles=count**2, turns=1000, flags=ufo.FIVED | ufo.KICK, parameters=parameters)
 
 x = y = numpy.linspace(-0.04, 0.04, num=count) #initial particle coordinates
 xx, yy = numpy.meshgrid(x, y, sparse=False)    #are on a square grid 4x4 cm^2
@@ -382,27 +423,27 @@ xx, yy = numpy.meshgrid(x, y, sparse=False)    #are on a square grid 4x4 cm^2
 sa.parameters[:, 0] = xx.flatten() #set the inial particles coordinates
 sa.parameters[:, 1] = yy.flatten()
 
-#set a random 20um error for each magnet, but equal for each particle
+#set a random octupolar error for each magnet, but equal for each particle
 numpy.random.seed(0)
-sa.parameters[:, 2:] = numpy.random.randn(len(parameters) - 2) * 20e-6
+sa.parameters[:, 2:] = numpy.random.randn(len(parameters) - 2) * 100.
 
 sa.run(threads=count**2)
 print(sa.lost.reshape([count, count]))
 ```
-In the previous example the dynamic aperture is calculated by tracking a grid of 12x12 particles, equally spaced in the transverse plane.
-A horizontal and vertical alignement error is also added individually to each magnet of the lattice. This examample code should produce the following output:
+
+An octupolar field error is added to each quadrupole of the lattice. This examample code should produce the following output:
 ```
 [[   0    0    0    0    0    0    0    0    0    0    0    0]
- [   0    0    0    1    0    0    0    0    0    0    0    0]
- [   0    1    1    2    0    0    0    0    1    2    2    0]
- [   0    1    3    2    7    1    1    5    4    2    4    0]
- [   0    1    3   85  204 1000 1000   16  130    2    2    0]
- [   0    2   47 1000 1000 1000 1000 1000 1000  174    5    1]
- [   1    2  341 1000 1000 1000 1000 1000  528   15    2    3]
- [   0    1    9  869 1000 1000 1000  468  628   13    1    0]
- [   0    6    3    4   22    1    8    4    8    5    7    1]
- [   0    1   20   10    0    0    0    1    6    3    0    0]
- [   0    0    4    0    0    0    0    0    0    0    0    0]
+ [   0    0    0    0    0    0    0    0    0    0    0    0]
+ [   0    0    0    0    0    0    0    0    2    0    1    0]
+ [   0    1    5    2    2    1    2    5    5    3    1    0]
+ [   0    1   17  501 1000 1000 1000   64   64    6    0    0]
+ [   0    1    6   86 1000 1000 1000 1000  296    3    1    0]
+ [   0    1    6   86 1000 1000 1000 1000  296    3    1    0]
+ [   0    1   17  501 1000 1000 1000   64   64    6    0    0]
+ [   0    1    5    2    2    1    2    5    5    3    1    0]
+ [   0    0    0    0    0    0    0    0    2    0    1    0]
+ [   0    0    0    0    0    0    0    0    0    0    0    0]
  [   0    0    0    0    0    0    0    0    0    0    0    0]]
 ```
 
