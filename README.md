@@ -129,52 +129,36 @@ furthermore the following keyword parameters are supported by each element:
 For Quadrupole, Sbend and Rbend the `slices`, `dkn` and `dks` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
 
 
-**slices:**      Number of slices used in Teapot expansion         
-
-**length:**      Length of the element [m]
-
-**angle:**       Bending angle [rad]
-
-**k1:**          Magnetic gradient normalized by the beam rigidity [m^-2]
- 
-**e1 / e2:**     Entry / exit pole angle [rad]
-
-**hgap / fint:** Magnet half gap [m] and fringe field integral
-
-**knl / ksl:**   Integrated normal and skew field multipolar components [m^-n]
-
-**k2 / k2s:**    Normal and skew sextupolar component [m^-3]       
-
-**k3 / k3s:**    Normal and skew octupolar component [m^-4]        
-
-**dx / dy:**     Horizontal and vertical alignement errors [m]        
-
-**dkn / dks:** Integrated normal and skew multipolar field errors [m^-n] 
+* **slices:**      Number of slices used in Teapot expansion
+* **length:**      Length of the element [m]
+* **angle:**       Bending angle [rad]
+* **k1:**          Magnetic gradient normalized by the beam rigidity [m^-2]
+* **e1 / e2:**     Entry / exit pole angle [rad]
+* **hgap / fint:** Magnet half gap [m] and fringe field integral
+* **knl / ksl:**   Integrated normal and skew field multipolar components [m^-n]
+* **k2 / k2s:**    Normal and skew sextupolar component [m^-3]       
+* **k3 / k3s:**    Normal and skew octupolar component [m^-4]        
+* **dx / dy:**     Horizontal and vertical alignement errors [m]        
+* **dkn / dks:** Integrated normal and skew multipolar field errors [m^-n] 
 
 For example a new quadrupole with length 1 m and strength 2 m^-1 can be instantiated with:
-
 ```
 qf = ufo.Quadrupole('qf', length=1, k1=2)
 ```
 
 Afterwards, element parameters can be accessed and changed with:
-
 ```
 qf.dx = 1e-3   #displace horizontally 'qf' by 1mm
 qf.k1 *= 1.1   #increase k1 by 10%
 ```
 
 Field multipoles `knl, ksl, dkn and dks` can be accessed in two diffrent ways
-
 * as a vector:
-
 ```
 qf.dkn = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
 ```
-
 * With a scalar notation `kN, kNs, dkN and dkNs` with N the order of the multipole. Note that in this case the component must have been previously defined when the element was instantiated or with the vector notation.
   As explained afterwards, this notation is useful when speciying parameters. Whereas the vector notation is not compatible with parametrization.
-
 ```
 #if 'knl' has length < 3, the next instruction will fail
 qf = ufo.Quadrupole('qf', length=1, k1=2, dkn=[0, 0, 0])
@@ -188,7 +172,6 @@ A line is a list of elements or other lines and is used to describe the ordering
 The Line class is derived from the python list class, therefore all the standard lists functionalities are available (`append, remove, copy...`)
 
 * **label:**   An unique string identifying the line
-
 * **line:**    A list of elements or other lines to be included
 
 The Line class is provided with some special function and attribute to easy certain common tedious tasks:
@@ -196,18 +179,14 @@ The Line class is provided with some special function and attribute to easy cert
 Attributes:
 
 * **count:**  Teturn the number of elements in the line (including the ones in included lines)
-
 * **length:** The overall line length
-
 * **angle:**  The overall line bending angle
 
 Methods:
 
 * **flatten():**        return a flattened version of the line (all sub-lines will be recursively expanded)
-
 * **find(what):**       return a list of elements indices such that `what(element) == True`
   * ***what:*** filter function should take as argument an element object and return a boolean (lambda functions here are pretty handy)
-
 * **locate(element):**  return the position in meters of a given element index
   * ***element:*** element object
 
@@ -264,17 +243,11 @@ RING:   LINE=(PERIOD, PERIOD, PERIOD, PERIOD);
 A Beam object collects all the informations relative to particles
 
 * **energy:**        particles energy [eV]
-
 * **particle_mass:** particle mass [eV]
-
 * **bunch_charge:**  charge of the entire bunch [C]
-
 * **beam_current:**  average beam current [A]
-
 * **ex / ey:**       horizontal and vertical emittances [m]
-
 * **bunch_length:**  longitudinal dimension of the bunch [m]
-
 * **energy_spread:** RMS energy spread of the bunch divided by the average bunch energy
 
 ## dump(lattice, path, style='mad', beam=Beam())
@@ -282,11 +255,8 @@ A Beam object collects all the informations relative to particles
 A lattice can be exported in a text file compatible with one of the following programs MAD-X, Elegant, Accelerator-Toolbox or OPA
 
 * **lattice:** the Lattice to be exported
-
 * **path:**    the name of the output file to be generated
-
 * **style:**   A string representing the syntax to be used. It can be 'mad', 'elegant', 'at' or 'opa'
-
 * **beam:**    Beam informations are used only in when exporting to 'at' or 'opa'
 
 Examples:
@@ -302,27 +272,18 @@ ufo.dump(lattice, 'ring.ele', style='elegant')
 Compute how many turns a particle survive in a ring. At the end of each turn the horizontal and vertical coordinates are checked, if found greater than 1m the particle will be considered as lost. Useful to estimate dynamic aperture and momentum aperture. Simulation parameters includes initial particle coordinates and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
 
 * **line:**  the Line object to be used for tracking
-
 * **flags:** flags to control specific tracking options, see section **flags** for detailed informations
-
 * **turns:** the maximum number of turns to be tracked
-
 * **particles:** the number of particles to be tracked
-
 * **parameters:** a list of parameters to be allowed for variation, see section **parameters** for detailed informations
-
 * **dp:** relative energy deviation used when the **FIVED** flag is set (5D simulation)
-
 * **context:** an OpenCL context as returned by `ufo.context()`
-
 * **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
 Attributes:
 
 * **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
-
 * **lost** the output buffer where the number of turns made by each particle before getting lost will be stored
-
 * **src:** source code of the OpenCL kernel, useful for debugging
 
 Methods:
@@ -410,29 +371,19 @@ print(sa.lost.reshape([count, count]))
 Track allows to track a bunch of particles through a line. Simulation parameters includes initial particle coordinates and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to track at the same time (in parallel hardware permitting) particles with different optics settings, for example with different sextupols strength or different alignment errors.
 
 * **line:**  the Line object to be used for tracking
-
 * **flags:** flags to control specific tracking options, see section **flags** for detailed informations
-
 * **turns:** the number of turns to be tracked
-
 * **particles:** the number of particles to be tracked
-
 * **parameters:** a list of parameters to be allowed for variation, see section **parameters** for detailed informations
-
 * **where:** a list of positions where the particles coordinate will be recorded at each turn. Positions are specified as a floating variable, where the integer part identifies the element index while the fractional part is the position along the element expressed as a fraction of the entire element length. The special position -1 identify the end of the line
-
 * **dp:** relative energy deviation used when the **FIVED** flag is set (5D simulation)
-
 * **context:** an OpenCL context as returned by `ufo.context()`
-
 * **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
 Attributes:
 
 * **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
-
 * **tracks** the output buffer where the tracking results will be stored
-
 * **src:** source code of the OpenCL kernel, useful for debugging
 
 Methods:
@@ -445,27 +396,18 @@ Methods:
 Find the closed orbit by minimizing the residuals between initial and final coordinate of a particle tracked over one turn. The minimization is carried out using the Nelder–Mead method. The optimization process is iterated for a fixed number of times before stopping, no other stopping criteria is available. Simulation parameters includes initial closed orbit 'guess' and lattice parameters (length of elements, field strenghts, alignment errors...). Parameters are specified per-particle, therefore it is possible to compute at the same time (in parallel hardware permitting) closed orbits with different optics settings, useful for example for response matrix.
 
 * **line:**  the Line object to be used for closed orbit computation
-
 * **flags:** flags to control specific tracking options, see section **flags** for detailed informations
-
 * **particles:** the number of closed orbits to be computed
-
 * **parameters:** a list of parameters to be allowed for variation, see section **parameters** for detailed informations
-
 * **dp:** relative energy deviation used when the **FIVED** flag is set (5D simulation)
-
 *  **iteration:** the number of iterations of the Nelder-Mead minimization before stopping the search 
-
 * **context:** an OpenCL context as returned by `ufo.context()`
-
 * **options:** OpenCL back-end options, see section **OpenCL options** for detailed informations
 
 Attributes:
 
 * **parameters:** a numpy buffer containing all the simulation parameters. Note that the buffer is not initialized, therefore is up to the user to set it properly before calling the `run()` method
-
 * **orbits** the output buffer where the closed orbits will be stored
-
 * **src:** source code of the OpenCL kernel, useful for debugging
 
 Methods:
@@ -591,11 +533,8 @@ print(co.orbits[1]) #Print the orbit of the second particle
 Many simulations parameters are controlled by a set of boolean flags:
 
 * **LINEAR:**           purely linear simulation. Every non linear field will be set to 0. Useful for example for linear optics
-
 * **FIVED:**            particles energy is fixed to a common value and not allowed to vary during the simulation (5D simulation). 5D simulations can be faster respect to full 6D
-
 * **EXACT:**            use exact Hamiltonian
-
 * **KICK:**             replace thick elements (Sbend, Rbend and Quadrupole) with thin kicks and drifts using the teapot expansion. The default number of slices used for the expansion is defined by the variables:
   * **DEFAULT_QUADRUPOLE_SLICES**
   * **DEFAULT_BEND_SLICES**
@@ -604,9 +543,7 @@ Many simulations parameters are controlled by a set of boolean flags:
   * **DEFAULT_OCTUPOLE_SLICES**
 
 * **RADIATION:**        not yet implemented
-
 * **DOUBLE_PRECISION:** use 64 bit variables instead of 32 bit. Double precision allows for higher precision at the expense of performance (expecially on GPU)
-
 * **ACHROMATIC:**       suppress the chromatic focusing effects. Useful for dispersion computation
 
 ## OpenCL options
