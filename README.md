@@ -400,7 +400,7 @@ This examample code should produce the following output:
 ```
 
 In the following example an octupolar field error is added independently to each quadrupole.
-Note that field errors (dkn / dks) are not implemented only in thick elements (Sbend, Rbend and Quadrupole), therefore the teapot expansion should be enabled by setting the **KICK** flag when calling StableAperture:
+Note that field errors (dkn / dks) are not implemented in thick elements such as Sbend, Rbend and Quadrupole, therefore the teapot expansion should be enabled by setting the **KICK** flag when calling StableAperture. The teapot expansion will convert thick elements in a succession of thin kicks and drifts, allowing to include higher order multipoles but resulting in a usually slower execution time. The default number of slices 
 
 ```
 import numpy
