@@ -10,7 +10,7 @@ The entire accelerator lattice, including lines and elements, can be rapresented
 A lattice object can be build manually or more easily from an input file (UFO uses a MAD-X dialect to describe a lattice).
 
 The lines contained in a Lattice object can then be used to feed one of the simulation classes.
-All the physics classes follow the same approach: an OpenCL representation of the `pass method` (routine to track a particle through the line) of the line is produced
+All the physics classes follow the same approach: an OpenCL representation of the 'pass method' (routine to track a particle through the line) of the line is produced
 and compiled for a specific OpenCL back-end. Subsequently the user can run the simulation as many times as required.
 
 For performance's sake all the elements parameters (e.g. length, gradients) and initial simulation conditions (e.g. initial particle coordinates)
