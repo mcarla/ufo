@@ -120,9 +120,9 @@ import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
 ex = track.tracks[:, :, 0]**2 / betax + track.tracks[:, :, 1]**2 * betax
 ex = numpy.mean(ex, axis=0)
-ax.plot(ex)
+ax.plot(ex * 1e9)
 ax.set_xlabel('Turn #')
-ax.set_ylabel('Horizontal emittance [m]')
+ax.set_ylabel('Ex [nm]')
 plt.show()
 ```
 
