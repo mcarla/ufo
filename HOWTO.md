@@ -22,7 +22,7 @@ Parameters are specified per particle, therefore it is possible to run in parall
 as required for example to compute a response matrix, where the same simulation is run for different magnets settings.
 
 
-## _Supported elements and parameters_
+## _Elements_
 
 UFO support several elements (drift, quarupole, dipole...). Each element is identified by a unique label,
 furthermore the following keyword parameters are supported by each element:
@@ -77,6 +77,53 @@ qf.dkn = [0., 0., 0.3]  #Add a sextupolar error to 'qf'
 qf = ufo.Quadrupole('qf', length=1, k1=2, dkn=[0, 0, 0])
 
 qf.dk2 = 0.3 #has the same effect as qf.dkn = [0., 0., 0.3]
+```
+
+New elements can be defined from scratch or derived from existing one. A typical use case is defining elements with time dependent behaviour (e.g. kicker, power supply noise...). In this case the only part of the element class that needs to be redefined is the 'pass method' which is calles `method()`.
+Follows a simple simulation of the emittance blow-up induced by a quadrupolar kick, as the one produced on the stored beam by the residual field of a non-linear injection kicker.
+The non-linear kicker is simulated with a thin multipolar multipole, the 'pass method' is redefined in order to switch on the kick only at turn 20:
+
+```
+import numpy
+import ufo
+
+class NLK(ufo.Multipole):
+    def method(self, k1=None, **kwargs):
+        k1 = k1 or self.knl[1]
+        k1 = f"(turn == 20) ? {k1} : 0."
+
+        return super().method(k1=f'({k1})', **kwargs)
+
+alba = ufo.Lattice(path='../optics/alba.mad')
+nlk = NLK('PINGER', knl=[0., 5e-2])
+
+alba.RING.insert(0, nlk)
+
+betax = 11.26
+ex0 = 4.3e-9
+
+count = 100
+track = ufo.Track(alba.RING, particles=count, flags=ufo.FIVED, turns=65, where=[-1], parameters=['x', 'px'])
+
+numpy.random.seed(0)
+track.parameters[:, 0] = numpy.random.randn(count) * numpy.sqrt(0.5 * betax * ex0)
+track.parameters[:, 1] = numpy.random.randn(count) * numpy.sqrt(0.5 * ex0 / betax)
+
+track.run(threads=100)
+```
+
+Results are plotted with:
+
+```
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+ex = track.tracks[:, :, 0]**2 / betax + track.tracks[:, :, 1]**2 * betax
+ex = numpy.mean(ex, axis=0)
+ax.plot(ex)
+ax.set_xlabel('Turn #')
+ax.set_ylabel('Horizontal emittance [m]')
+plt.show()
 ```
 
 ## _Line(label, line=[])_
