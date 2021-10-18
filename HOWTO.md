@@ -156,7 +156,7 @@ class NLK(ufo.Multipole):
         t0  = t0 or self.t0
         tau = tau or self.tau
 
-        k1 = f"(((float)turn >= {t0}) && ((float)turn < {t0} + {tau}) )? {k1} * sin(3.1415 * ((float)turn - {t0}) / {tau}): 0."
+        k1 = f"((turn >= {t0}) && (turn < {t0} + {tau}) )? {k1} * sin(3.1415 * ((float)turn - {t0}) / {tau}): 0."
 
         return super().method(k1=f'({k1})', **kwargs)
 
