@@ -126,6 +126,8 @@ ax.set_ylabel('Horizontal emittance [m]')
 plt.show()
 ```
 
+![nlk emittance blow-up](https://github.com/mcarla/ufo/blob/main/doc/nlk.png)
+
 ## _Line(label, line=[])_
 
 A line is a list of elements or other lines and is used to describe the ordering of a magnetic lattice.
