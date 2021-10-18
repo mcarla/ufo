@@ -163,7 +163,7 @@ class NLK(ufo.Multipole):
 betax = 11.26
 ex0 = 4.3e-9
 
-tau = 1.5
+tau = 1.5 #Pulse length expressed in turns
 count = 100
 
 alba = ufo.Lattice(path='../optics/alba.mad')
