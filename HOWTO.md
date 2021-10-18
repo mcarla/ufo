@@ -128,6 +128,7 @@ ax.set_ylabel('Ex [nm]')
 plt.show()
 ```
 
+An emittance blow-up after turn 20 should be clearly visible:
 ![nlk emittance blow-up](https://github.com/mcarla/ufo/blob/main/doc/nlk.png)
 
 ## _Line(label, line=[])_
