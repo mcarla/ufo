@@ -197,6 +197,8 @@ plt.show()
 
 ```
 
+Depending on the position in the filling pattern some bunch gets kicked 2 times, while others only once:
+
 ![nlk emittance blow-up](https://github.com/mcarla/ufo/blob/main/doc/nlk2.png)
 
 ## _Line(label, line=[])_
