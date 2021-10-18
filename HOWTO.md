@@ -95,7 +95,7 @@ class NLK(ufo.Multipole):
         return super().method(k1=f'({k1})', **kwargs)
 
 alba = ufo.Lattice(path='../optics/alba.mad')
-nlk = NLK('PINGER', knl=[0., 5e-2])
+nlk = NLK('NLK', knl=[0., 5e-2])
 
 alba.RING.insert(0, nlk)
 
