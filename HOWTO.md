@@ -137,8 +137,64 @@ Besdides modifying the behavior of exising parameters, sometimes it is useful to
 This is achieved by redefining the `__init__()` method:
 
 ```
+import numpy
+import ufo
+
+class NLK(ufo.Multipole):
+    def __init__(self, label, t0=0., tau=0., **kwargs):
+        super().__init__(label, **kwargs)
+        self.tau = tau #NLK pulse length expressed in turns
+        self.t0  = t0  #time at wich the NLK will fire expressed in turns
+        self.parameters.append('tau')
+        self.parameters.append('t0')
+
+    def method(self, k1=None, t0=None, tau=None, **kwargs):
+        k1  = k1 or self.knl[1]
+        t0  = t0 or self.t0
+        tau = tau or self.tau
+
+        k1 = f"(((float)turn >= {t0}) && ((float)turn < {t0} + {tau}) )? {k1} * sin(3.1415 * ((float)turn - {t0}) / {tau}): 0."
+
+        return super().method(k1=f'({k1})', **kwargs)
+
+betax = 11.26
+ex0 = 4.3e-9
+
+tau = 1.5
+count = 100
+
+alba = ufo.Lattice(path='../optics/alba.mad')
+nlk = NLK('NLK', knl=[0., 5e-2], tau=tau)
+
+alba.RING.insert(0, nlk)
+
+
+track = ufo.Track(alba.RING, particles=count, flags=ufo.FIVED, turns=15, where=[-1], parameters=['x', 'px', ('NLK', 't0')])
+
+numpy.random.seed(0)
+track.parameters[:, 0] = numpy.random.randn(count) * numpy.sqrt(0.5 * betax * ex0)
+track.parameters[:, 1] = numpy.random.randn(count) * numpy.sqrt(0.5 * ex0 / betax)
+```
 
 ```
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+
+for t0 in numpy.linspace(0., 1.0, 7, endpoint=False):
+    track.parameters[:, 2] = t0 + 5.
+    track.run(threads=100)
+
+    ex = track.tracks[:, :, 0]**2 / betax + track.tracks[:, :, 1]**2 * betax
+    ex = 1e9 * numpy.mean(ex, axis=0)
+    ax.plot(ex)
+    ax.text(12, ex[-1], f't0={t0:1.2f}', fontsize=10)
+
+plt.show()
+
+```
+
+![nlk emittance blow-up](https://github.com/mcarla/ufo/blob/main/doc/nlk2.png)
 
 ## _Line(label, line=[])_
 
