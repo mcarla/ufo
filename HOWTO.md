@@ -79,7 +79,7 @@ qf = ufo.Quadrupole('qf', length=1, k1=2, dkn=[0, 0, 0])
 qf.dk2 = 0.3 #has the same effect as qf.dkn = [0., 0., 0.3]
 ```
 
-New elements can be defined from scratch or derived from existing one. A typical use case is defining elements with time dependent behaviour (e.g. kicker, power supply noise...). In this case the only part of the element class that needs to be redefined is the 'pass method' which is calles `method()`.
+New elements can be defined from scratch or derived from existing one. A typical use case is defining elements with time dependent behaviour (e.g. kicker, power supply noise...). In this case the only part of the element class that needs to be modified is the 'pass method' which is called `method()`.
 Follows a simple simulation of the emittance blow-up induced by a quadrupolar kick, as the one produced on the stored beam by the residual field of a non-linear injection kicker.
 The non-linear kicker is simulated with a thin multipolar multipole, the 'pass method' is redefined in order to switch on the kick only at turn 20:
 
