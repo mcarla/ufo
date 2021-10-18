@@ -89,30 +89,32 @@ import ufo
 
 class NLK(ufo.Multipole):
     def method(self, k1=None, **kwargs):
-        k1 = k1 or self.knl[1]
-        k1 = f"(turn == 20) ? {k1} : 0."
-
-        return super().method(k1=f'({k1})', **kwargs)
+        k1 = k1 or self.knl[1] #if k1 is not a parameter fallback to the value specified in the lattice
+        k1 = f"(turn == 20) ? {k1} : 0." #k1 is expressed as an OpenCL code snippet
+ 
+        return super().method(k1=f'({k1})', **kwargs) #parentheses around paraneters are always a good ideas
 
 alba = ufo.Lattice(path='../optics/alba.mad')
-nlk = NLK('NLK', knl=[0., 5e-2])
+nlk = NLK('NLK', knl=[0., 5e-2]) #instantiate a new non-linear kicker object
 
-alba.RING.insert(0, nlk)
+alba.RING.insert(0, nlk) #add the kicker to the existing Alba lattice
 
-betax = 11.26
-ex0 = 4.3e-9
+betax = 11.26 #horizontal beta at the beginning of the ring
+ex0 = 4.3e-9  #equilibrium horizontal emittance
 
-count = 100
+count = 100 #simulate a bunch of 100 particles
+
+#particle coordinates are sampled once per turn, at the end of the ring (position -1)
 track = ufo.Track(alba.RING, particles=count, flags=ufo.FIVED, turns=65, where=[-1], parameters=['x', 'px'])
 
-numpy.random.seed(0)
+#initial particles coordinates (x, px)
 track.parameters[:, 0] = numpy.random.randn(count) * numpy.sqrt(0.5 * betax * ex0)
 track.parameters[:, 1] = numpy.random.randn(count) * numpy.sqrt(0.5 * ex0 / betax)
 
-track.run(threads=100)
+track.run(threads=100) #run using 100 cores in parallel if available
 ```
 
-Results are plotted with:
+The emittance is derived from the sampled coordinates (x, px), and plotted with:
 
 ```
 import matplotlib.pyplot as plt
