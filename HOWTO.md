@@ -133,8 +133,11 @@ An emittance blow-up after turn 20 should be clearly visible:
 ![nlk emittance blow-up](https://github.com/mcarla/ufo/blob/main/doc/nlk.png)
 
 In the previous example the parameter `k1` is modified and no new parameter is added to the NLK element.
-Besdides modifying the behavior of exising parameters, sometimes it is useful to only add new ones.
-This is achieved by redefining the `__init__()` method:
+Besides modifying the behavior of exising parameters, sometimes it is useful to add new ones.
+This requires to redefine the `__init__()` method.
+In the following example a more realistic non-linear kicker with a sinusoidal pulse is defined.
+Two new parameters are introduced, the pulse length and the kick time both expressed in units of turn periods.
+`self.parameters` defines a list of parameters accepted by the element class, therefore 2 new parameters are appended to this list.
 
 ```
 import numpy
@@ -169,19 +172,19 @@ nlk = NLK('NLK', knl=[0., 5e-2], tau=tau)
 alba.RING.insert(0, nlk)
 
 
-track = ufo.Track(alba.RING, particles=count, flags=ufo.FIVED, turns=15, where=[-1], parameters=['x', 'px', ('NLK', 't0')])
+track = ufo.Track(alba.RING, particles=count, flags=ufo.FIVED, turns=15, where=[-1],
+                  parameters=['x', 'px', ('NLK', 't0')])
 
 numpy.random.seed(0)
 track.parameters[:, 0] = numpy.random.randn(count) * numpy.sqrt(0.5 * betax * ex0)
 track.parameters[:, 1] = numpy.random.randn(count) * numpy.sqrt(0.5 * ex0 / betax)
-```
 
-```
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
 
-for t0 in numpy.linspace(0., 1.0, 7, endpoint=False):
+#scan the NLK trigger time t0 over one turn to observe the blow-up produced on different bunches
+for t0 in numpy.linspace(0., 1.0, 7, endpoint=False): #scan the NLK trigger time (t0)
     track.parameters[:, 2] = t0 + 5.
     track.run(threads=100)
 
