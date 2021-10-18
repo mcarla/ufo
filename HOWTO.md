@@ -132,6 +132,14 @@ An emittance blow-up after turn 20 should be clearly visible:
 
 ![nlk emittance blow-up](https://github.com/mcarla/ufo/blob/main/doc/nlk.png)
 
+In the previous example the parameter `k1` is modified and no new parameter is added to the NLK element.
+Besdides modifying the behavior of exising parameters, sometimes it is useful to only add new ones.
+This is achieved by redefining the `__init__()` method:
+
+```
+
+```
+
 ## _Line(label, line=[])_
 
 A line is a list of elements or other lines and is used to describe the ordering of a magnetic lattice.
