@@ -475,3 +475,30 @@ class Octupole(Element):
         if style == 'opa':
             return f"{self.label} : octupole, l = {self.length}, k = {self.k3 * .5};\r\n"
 
+class Wire(Element):
+    """
+    Kick produced by a wire parallel to the beam.
+    The magnitude of the produced kick is k / r.
+
+    label : str   -> Name of the element
+    x, y  : float -> Horizontal and vertical position of the wire 
+    k     : float -> Field strength mu0 * I / (2pi), with I the wire current
+    """
+    def __init__(self, label, x=0., y=0., k=0.):
+        self.label = label
+        self.x     = x
+        self.y     = y
+        self.k     = k
+        self.parameters = ['x', 'y', 'k']
+
+    def method(self, flags=0, fracture=[], x=None, y=None, k=None, **kwargs):
+        x    = x     or self.x
+        y    = y     or self.y
+        k    = k     or self.k
+
+        code = methods.wire(x, y, k)
+        return [code] #[methods.wire(x, y, k)]
+
+    def dump(self, style):
+        print('Warning: dumping of Wire elements is not supported!')
+

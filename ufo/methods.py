@@ -226,6 +226,20 @@ def octupole(flags, slices, length, k3, k3s, dkn, dks):
 
     return teapot(flags, length, slices, knl, dks)
 
+#A wire parallel to the beam, with coordinates x, y
+def wire(x, y, k):
+    fragment = ('{\n'
+                '    ufloat alpha, B;\n'
+
+               f'     alpha = atan2({y} - y, {x} - x);\n'
+               f'     B = ({k}) / hypot({x} - x, {y} - y);\n'
+
+                '     px += B * cos(alpha);\n'
+                '     py += B * sin(alpha);\n'
+                '}\n')
+
+    return fragment
+
 #def cavity(flags, field, frequency, lag):
 #    #field is normalized by pc (reference beam energy)
 #    #frequency is in Hz
