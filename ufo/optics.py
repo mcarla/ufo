@@ -116,7 +116,7 @@ class Optics():
 
         self.track = np.zeros([particles, self.count, 6], dtype=ufloat)
         self.src = kernel
-        self.kernel = cl.Program(context, kernel).build(options=options)
+        self.kernel = cl.Program(self.ctx, kernel).build(options=options)
 
         mf = cl.mem_flags
         self.__dev_pool_idx = cl.Buffer(self.ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=self.pool_idx)
