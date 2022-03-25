@@ -71,18 +71,6 @@ class Line(list):
                 return s
             s += getattr(e, 'length', 0.)
 
-    def survey(self, x0=[0., 0.], alpha0=0.):
-        """Not fully implemented"""
-        x = []
-        alpha = []
-        for e in self:
-            x0, alpha0 = e.survey(x0=x0, alpha0=alpha0)
-            x.append(x0)
-            alpha.append(alpha0)
-
-        return x, alpha    
-        #return [x = e.survey(x=x, alpha=alpha) for e in self]
-
     def method(self, fracture=[], flags=0, parameters=[]):
         """
         Return the OpenCL pass method

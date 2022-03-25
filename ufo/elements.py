@@ -56,15 +56,6 @@ class Element():
     def method(self, **kwargs):
         return ['']
 
-    def survey(self, x0=[0., 0.], alpha0=0.):
-        length  = getattr(self, 'length', 0.)
-        alpha0 += getattr(self, 'angle',  0.)
-
-        x0[0] += np.cos(alpha0) * length
-        x0[1] += np.sin(alpha0) * length
-
-        return x0.copy(), alpha0
-
 class Marker(Element):
     """
     A marker element
