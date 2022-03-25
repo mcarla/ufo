@@ -73,7 +73,17 @@ def parse_line(tokenizer, lattice, line):
 
     while True:
             token = pop_or_die(tokenizer, 'ID')
-            line.append(lattice[token.value])
+
+            value = token.value
+            if value[0] == '-':
+                reverse = True
+                value = value[1:] 
+
+            if value in lattice:
+                if type(lattice[value]) is ufo.Line:
+                    line.extend(reversed(lattice[value]) if reverse else lattice[value])
+                else:
+                    line.append(lattice[value])
 
             token = next(tokenizer)
             if token.type == 'CLOSE':
