@@ -73,8 +73,9 @@ def parse_line(tokenizer, lattice, line):
 
     while True:
             token = pop_or_die(tokenizer, 'ID')
-
             value = token.value
+
+            reverse = False
             if value[0] == '-':
                 reverse = True
                 value = value[1:] 
