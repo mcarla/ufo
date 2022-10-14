@@ -493,3 +493,24 @@ class Wire(Element):
     def dump(self, style):
         print('Warning: dumping of Wire elements is not supported!')
 
+class Srotation(Element):
+    """
+    Rotation about the longitudinal axis.
+
+    label : str   -> Name of the element
+    angle : float -> Rotation angle 
+    """
+    def __init__(self, label, angle=0.):
+        self.label = label
+        self.angle = angle
+        self.parameters = ['angle']
+
+    def method(self, flags=0, fracture=[], angle=None, **kwargs):
+        angle = angle or self.angle
+
+        code = methods.srotation(angle)
+        return [code]
+
+    def dump(self, style):
+        print('Warning: dumping of Srotation elements is not supported!')
+

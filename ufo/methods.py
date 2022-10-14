@@ -240,6 +240,21 @@ def wire(x, y, k):
 
     return fragment
 
+def srotation(angle):
+    fragment = ('{\n'
+                '    ufloat C, S;\n'
+                '    ufloat x0 = x;\n'
+                '    ufloat y0 = y;\n'
+
+               f'    C   = cos({angle});\n'
+               f'    S   = sin({angle});\n'
+
+                '     x = x0 * C - y0 * S;\n'
+                '     y = x0 * S + y0 * C;\n'
+                '}\n')
+
+    return fragment
+
 #def cavity(flags, field, frequency, lag):
 #    #field is normalized by pc (reference beam energy)
 #    #frequency is in Hz
