@@ -132,6 +132,7 @@ class ClosedOrbit():
     line       : Line    -> Ring to be used for tracking
     flags      : int     -> Combination of: LINEAR, FIVED, EXACT, KICK,
                             RADIATION, DOUBLE_PRECISION, ACHROMATIC
+    turns      : int     -> Number of turns to be tracked
     particles  : int     -> Number of particles in the bunch
     parameters : list    -> A list of parameters that will not be hardcoded in
                             the pass method. Parameter buffer is accessed via
@@ -143,9 +144,10 @@ class ClosedOrbit():
     context    : Context -> OpenCL context, as returned by ufo.context() 
     options    : str     -> OpenCL compiler options
     """
-    def __init__(self, line, flags=0x00, particles=1000, parameters=[], dp=0.,
-                 iterations=200, context=None, options=None):
+    def __init__(self, line, flags=0x00, turns=1, particles=1000, parameters=[],
+                 dp=0., iterations=200, context=None, options=None):
 
+        self.turns = turns
         self.ctx   = context if context else ufo.DEFAULT_CONTEXT
         self.queue = cl.CommandQueue(self.ctx)
         options    = options if options else ufo.DEFAULT_CL_OPTIONS
@@ -183,7 +185,9 @@ class ClosedOrbit():
         kernel += '    ufloat dp = 0.;'
         kernel += '    ufloat oodppo = 1.;'
 
+        kernel += f"        for (int turn = 0; turn < {self.turns}; turn++) {{\n"
         kernel += method
+        kernel +=  "        }\n"
 
         kernel += '    residuals  = (orbit[0] - x ) * (orbit[0] - x );'
         kernel += '    residuals += (orbit[1] - px) * (orbit[1] - px);'
