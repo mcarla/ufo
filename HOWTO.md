@@ -451,26 +451,26 @@ Find the closed orbit by minimizing the residuals between initial and final coor
 
 ### Examples:
 
-Compute the orbit distortion induced by each horizontal orbit corrector (horizontal orbit response matrix) in the ALBA storage ring:
+Compute the orbit distortion induced by the horizontal displacement of sextupoles in the ALBA storage ring:
 ```
 import numpy
 import ufo
 
 alba = ufo.Lattice(path='alba.mad')
 
-#ALBA has orbit correctors integrated in the sextupoles
-correctors  = alba.RING.find(lambda e: type(e) == ufo.Sextupole)
-count = len(correctors) #number of correctors
-parameters = [(e, 'dx') for e in correctors] #add horizontal orbit correctors
+#Get all the sextupoles in the ALBA storage ring
+sextupoles  = alba.RING.find(lambda e: type(e) == ufo.Sextupole)
+count = len(sextupoles) #number of sextupoles
+parameters = [(e, 'dx') for e in sextupoles] #Horizontal displacement of each sextupole
 
 co = ufo.ClosedOrbit(alba.RING, particles=count, flags=ufo.FIVED, parameters=parameters)
-#the computation of the closed orbit distortion due to a corrector is assigned to a particle
+#the computation of the closed orbit distortion due to a sextupole displacement is assigned to a particle
 co.parameters[:, :] = numpy.identity(count) * 1e-3 
 co.run(threads=count) #the computation is run in parallel
 
-print(co.orbits) #print the resulting closed orbit distortion associated to each corrector
+print(co.orbits) #print the resulting closed orbit distortion associated to each sextupole
 ```
-co.orbits contains the computed closed orbits coordinates (x, px, y, py) at the start of the ring. Each line refers to a different corrector.
+co.orbits contains the computed closed orbits coordinates (x, px, y, py) at the start of the ring. Each line refers to a different sextupoles.
 The output should look like:
 ```
 [[-3.5447621e-05  2.8344164e-07  3.0312110e-11  1.0759697e-11]
@@ -499,7 +499,7 @@ in this case the output would be:
  [-4.06958218e-05 -5.16921708e-06  2.87191971e-15 -1.74380874e-14]
  .....
 ```
-Note how in the latter case the vertical coordinates are much closer to 0, as to be expected since no vertical orbit is produced by the correctors and no other errors are present in the lattice.
+Note how in the latter case the vertical coordinates are much closer to 0, as to be expected since no vertical orbit is produced by the sextupole and no other optics error is present in the lattice.
 
 ## _Optics(line, where=[], periodic=True, parameters=[], flags=LINEAR | ACHROMATIC, context=None, options=None_
 
