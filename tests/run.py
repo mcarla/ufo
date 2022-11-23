@@ -30,3 +30,6 @@ align.test()
 print("\n"+ 80*"#" + "\n" + 35*" " + "CLOSED ORBIT\n" + 80*"#" + "\n")
 closed_orbit.test()
 
+print("\n"+ 80*"#" + "\n" + 35*" " + "APERTURE\n" + 80*"#" + "\n")
+aperture.test()
+

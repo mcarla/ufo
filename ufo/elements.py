@@ -502,3 +502,21 @@ class Wire(Element):
     def dump(self, style):
         print('Warning: dumping of Wire elements is not supported!')
 
+class Aperture(Element):
+    """
+    Particles are lost when flying outside the aperture
+
+    label : str   -> Name of the element
+    aperture : str -> Logical expression defining when a particle is lost
+    """
+    def __init__(self, label, aperture=0):
+        self.label      = label
+        self.aperture   = aperture
+        self.parameters = ['aperture']
+
+    def method(self, flags=0, fracture=[], **kwargs):
+        return [f'if ({self.aperture}) x = NAN;\n' ]
+
+    def dump(self, style):
+        print('Warning: dumping of Aperture elements is not supported!')
+
