@@ -506,16 +506,16 @@ class Aperture(Element):
     """
     Particles are lost when flying outside the aperture
 
-    label : str   -> Name of the element
-    aperture : str -> Logical expression defining when a particle is lost
+    label  : str -> Name of the element
+    window : str -> Logical expression defining when a particle is kept
     """
-    def __init__(self, label, aperture=0):
+    def __init__(self, label, window=0):
         self.label      = label
-        self.aperture   = aperture
+        self.window     = window
         self.parameters = ['aperture']
 
     def method(self, flags=0, fracture=[], **kwargs):
-        return [f'if ({self.aperture}) x = NAN;\n' ]
+        return [f'if ({self.window} == 0) x = NAN;\n' ]
 
     def dump(self, style):
         print('Warning: dumping of Aperture elements is not supported!')

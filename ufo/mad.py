@@ -109,7 +109,7 @@ def load(path, flatten=True):
         'SEXTUPOLE' : lambda label, L=0., K2=0., K2S=0.:   ufo.Sextupole(label, length=L, k2=K2, k2s=K2S),
         'OCTUPOLE'  : lambda label, L=0., K3=0., K3S=0.:   ufo.Octupole(label, length=L, k3=K3, k3s=K3S),
         'MULTIPOLE' : lambda label, KNL=[], KSL=[]:        ufo.Multipole(label, knl=KNL, ksl=KSL),
-        'APERTURE'  : lambda label, A=0:                   ufo.Aperture(label, aperture=A)
+        'APERTURE'  : lambda label, WINDOW=0:              ufo.Aperture(label, window=WINDOW)
     }
 
     try:
