@@ -28,16 +28,17 @@ UFO support several elements (drift, quarupole, dipole...). Each element is iden
 furthermore the following keyword parameters are supported by each element:
 
 
-|            | slices | length | angle |  k1   | e1 / e2 | hgap / fint | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dkn / dks |
-|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |    :---:    |   :---:   |  :---:   |  :---:   |  :---:  |   :---:   |
-| Marker     |        |        |       |       |         |             |           |          |          |         |           |
-| Drift      |        |   x    |       |       |         |             |           |          |          |         |           |
-| Mutlipole  |        |        |       |       |         |             |     x     |          |          |    x    |           |
-| Quadrupole |    x   |   x    |       |   x   |         |             |           |          |          |    x    |     x     |
-| Sbend      |    x   |   x    |   x   |   x   |    x    |      x      |           |          |          |    x    |     x     |
-| Rbend      |    x   |   x    |   x   |   x   |    x    |      x      |           |          |          |    x    |     x     |
-| Sextupole  |    x   |   x    |       |       |         |             |           |    x     |          |    x    |     x     |
-| Octupole   |    x   |   x    |       |       |         |             |           |          |    x     |    x    |     x     |
+|            | slices | length | angle |  k1   | e1 / e2 | hgap / fint | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dkn / dks | k / x / y |
+|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |    :---:    |   :---:   |  :---:   |  :---:   |  :---:  |   :---:   |           |
+| Marker     |        |        |       |       |         |             |           |          |          |         |           |           |
+| Drift      |        |   x    |       |       |         |             |           |          |          |         |           |           |
+| Mutlipole  |        |        |       |       |         |             |     x     |          |          |    x    |           |           |
+| Quadrupole |    x   |   x    |       |   x   |         |             |           |          |          |    x    |     x     |           |
+| Sbend      |    x   |   x    |   x   |   x   |    x    |      x      |           |          |          |    x    |     x     |           |
+| Rbend      |    x   |   x    |   x   |   x   |    x    |      x      |           |          |          |    x    |     x     |           |
+| Sextupole  |    x   |   x    |       |       |         |             |           |    x     |          |    x    |     x     |           |
+| Octupole   |    x   |   x    |       |       |         |             |           |          |    x     |    x    |     x     |           |
+| Wire       |        |        |       |       |         |             |           |          |          |         |           |     x     |
 
 For Quadrupole, Sbend and Rbend the `slices`, `dkn` and `dks` parameters have effect only when the `KICK` flag is set to True (Teapot expansioin)
 
