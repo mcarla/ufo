@@ -29,7 +29,7 @@ furthermore the following keyword parameters are supported by each element:
 
 
 |            | slices | length | angle |  k1   | e1 / e2 | hgap / fint | knl / ksl | k2 / k2s | k3 / k3s | dx / dy | dkn / dks | k / x / y |
-|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |    :---:    |   :---:   |  :---:   |  :---:   |  :---:  |   :---:   |           |
+|       ---: |  :---: |  :---: | :---: | :---: |  :---:  |    :---:    |   :---:   |  :---:   |  :---:   |  :---:  |   :---:   |   :---:   |
 | Marker     |        |        |       |       |         |             |           |          |          |         |           |           |
 | Drift      |        |   x    |       |       |         |             |           |          |          |         |           |           |
 | Mutlipole  |        |        |       |       |         |             |     x     |          |          |    x    |           |           |
