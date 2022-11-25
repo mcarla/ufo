@@ -54,7 +54,7 @@ For Quadrupole, Sbend and Rbend the `slices`, `dkn` and `dks` parameters have ef
 * **k3 / k3s:**    Normal and skew octupolar component [m^-4]        
 * **dx / dy:**     Horizontal and vertical alignement errors [m]        
 * **dkn / dks:**   Integrated normal and skew multipolar field errors [m^-n] 
-* **k / x / y:**   Field strength and transverse coordinate of a single wire magnet parallel to the beam
+* **k / x / y:**   Field strength and transverse coordinates of a single wire magnet parallel to the beam
 
 For example a new quadrupole with length 1 m and strength 2 m^-1 can be instantiated with:
 ```
